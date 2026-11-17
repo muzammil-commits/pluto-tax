@@ -54,7 +54,7 @@ export const ProcessSection: React.FC = () => {
     selectedStepIndex !== null ? PROCESS_STEPS[selectedStepIndex] : null;
 
   return (
-    <section className="relative w-full py-10 sm:py-14 bg-white/80 backdrop-blur-sm overflow-hidden border-b border-slate-200/60">
+    <section className="relative w-full py-10 sm:py-14 bg-[#EAF3FF]/85 backdrop-blur-sm overflow-hidden border-b border-blue-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header with Tightened Margins */}

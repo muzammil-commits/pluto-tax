@@ -27,14 +27,14 @@ export function App() {
     <SiteProvider>
       <AuthProvider>
         <BrowserRouter>
-          <div className="relative min-h-screen text-slate-800 selection:bg-pluto-gold selection:text-pluto-navy-deep overflow-x-hidden">
+          <div className="relative min-h-screen bg-[#EAF3FF] text-slate-800 selection:bg-pluto-gold selection:text-pluto-navy-deep overflow-x-hidden">
             
             {/* =========================================================================
                 GLOBAL WHOLE-WEBSITE BACKGROUND: image copy 5.png
                 Set across the entire website on both desktop and mobile view
                 ========================================================================= */}
             <div 
-              className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center md:bg-fixed opacity-30 filter contrast-105"
+              className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center md:bg-fixed opacity-35 filter contrast-105"
               style={{
                 backgroundImage: `url('/assets/site-bg.jpg'), url('/assets/site-bg.png')`,
                 backgroundSize: 'cover',

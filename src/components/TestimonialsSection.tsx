@@ -56,7 +56,7 @@ export const TestimonialsSection: React.FC = () => {
 
   return (
     <section 
-      className="relative w-full py-10 sm:py-14 bg-slate-50/70 backdrop-blur-sm overflow-hidden border-t border-slate-200/80"
+      className="relative w-full py-10 sm:py-14 bg-[#EAF3FF]/85 backdrop-blur-sm overflow-hidden border-t border-blue-200/60"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >

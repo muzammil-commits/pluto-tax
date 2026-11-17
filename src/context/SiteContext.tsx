@@ -24,7 +24,7 @@ interface SiteContextType {
 const SiteContext = createContext<SiteContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  SERVICES: 'plutotax_services_v1',
+  SERVICES: 'plutotax_services_v2',
   TESTIMONIALS: 'plutotax_testimonials_v1',
   STATS: 'plutotax_stats_v1',
   ENQUIRIES: 'plutotax_enquiries_v1',

@@ -34,7 +34,7 @@ export const ServicesPage: React.FC = () => {
   });
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full bg-[#EAF3FF]/40">
       
       {/* Page Hero */}
       <section className="relative bg-pluto-navy-deep text-white py-16 sm:py-24 overflow-hidden border-b border-pluto-gold/20">

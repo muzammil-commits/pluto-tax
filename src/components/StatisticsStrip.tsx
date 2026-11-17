@@ -100,15 +100,15 @@ export const StatisticsStrip: React.FC = () => {
   return (
     <section 
       className="relative w-full bg-pluto-navy-deep text-white border-y border-pluto-gold/30 overflow-hidden py-8 sm:py-10"
-      style={{
-        backgroundImage: "url('/assets/stats-strip-ref.png')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
     >
-      {/* Subtle overlay so text remains sharp while keeping the background texture */}
-      <div className="absolute inset-0 bg-pluto-navy-deep/80 backdrop-blur-[2px] pointer-events-none" />
+      {/* Subtle Dotted Pattern & Ambient Glow (No ghosted background images) */}
+      <div 
+        className="absolute inset-0 opacity-15 pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(rgba(255, 191, 0, 0.3) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
+        }}
+      />
 
       {/* Subtle Golden Glow Accent */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 h-16 bg-pluto-gold/15 blur-2xl pointer-events-none" />

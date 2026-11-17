@@ -5,18 +5,18 @@ import { COMPANY_INFO } from '../data/companyData';
 
 export const TopContactBar: React.FC = () => {
   return (
-    <div className="bg-pluto-navy-deep text-slate-200 border-b border-pluto-navy-border/60 text-xs py-2 px-4 sm:px-8 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
-        {/* Left: Location */}
-        <div className="flex items-center gap-2 text-slate-300 hover:text-pluto-gold transition-colors">
+    <div className="bg-pluto-navy-deep text-slate-200 border-b border-pluto-navy-border/60 text-xs py-1.5 sm:py-2 px-4 sm:px-8 transition-colors duration-200">
+      <div className="max-w-7xl mx-auto flex justify-end md:justify-between items-center gap-2">
+        {/* Left: Location (Hidden on mobile view per reference image 13) */}
+        <div className="hidden md:flex items-center gap-2 text-slate-300 hover:text-pluto-gold transition-colors">
           <MapPin className="w-3.5 h-3.5 text-pluto-gold shrink-0" />
           <span className="font-medium tracking-wide truncate max-w-md">
             {COMPANY_INFO.address}
           </span>
         </div>
 
-        {/* Center: Phone & Email */}
-        <div className="flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
+        {/* Center: Phone & Email (Hidden on mobile view per reference image 13) */}
+        <div className="hidden md:flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
           <a
             href={`tel:${COMPANY_INFO.phoneRaw}`}
             className="flex items-center gap-1.5 text-slate-200 hover:text-pluto-gold font-semibold transition-colors"
@@ -34,8 +34,8 @@ export const TopContactBar: React.FC = () => {
           </a>
         </div>
 
-        {/* Right: Client Portal & Security Badge */}
-        <div className="flex items-center gap-3">
+        {/* Right: Only Client Portal visible on mobile, with badge on desktop */}
+        <div className="flex items-center gap-3 w-full md:w-auto justify-end">
           <div className="hidden lg:flex items-center gap-1 text-[11px] text-emerald-400 font-medium">
             <Shield className="w-3 h-3 text-emerald-400" />
             <span>IRS Authorized e-file Provider</span>

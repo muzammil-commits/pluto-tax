@@ -65,7 +65,7 @@ export const ConsultationSection: React.FC = () => {
   };
 
   return (
-    <section id="consultation-section" className="relative w-full py-10 sm:py-14 bg-white/80 backdrop-blur-sm overflow-hidden border-t border-slate-200/80">
+    <section id="consultation-section" className="relative w-full py-10 sm:py-14 bg-[#EAF3FF]/85 backdrop-blur-sm overflow-hidden border-t border-blue-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">

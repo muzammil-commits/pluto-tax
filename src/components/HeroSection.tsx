@@ -37,24 +37,27 @@ export const HeroSection: React.FC = () => {
           className="absolute inset-0 bg-cover bg-center transition-transform duration-7000 ease-in-out animate-pulse-subtle"
           style={{
             backgroundImage: `url('/assets/hero-mobile-bg-bright.png')`,
-            backgroundPosition: 'center top',
-            filter: 'brightness(1.10) contrast(1.05)',
+            backgroundPosition: 'center 15%',
+            filter: 'brightness(1.22) contrast(1.08) saturate(1.08)',
           }}
         />
-        {/* Mobile Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-pluto-navy-deep/95 via-pluto-navy-deep/80 to-pluto-navy-deep/60 pointer-events-none" />
+        {/* Soft feather overlay so text is crisp and the advisor visual remains bright and radiant */}
+        <div className="absolute inset-0 bg-gradient-to-b from-pluto-navy-deep/80 via-pluto-navy-deep/50 to-pluto-navy-deep/20 pointer-events-none" />
+        
+        {/* Subtle top golden light ray */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-pluto-gold/15 rounded-full blur-3xl pointer-events-none" />
       </div>
 
       {/* Hero Foreground Content - Tightened Spacing & Reduced Sizes */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           
-          {/* Left Column: Headline, Description & CTAs */}
+          {/* Left Column: Headline, Description & CTAs with smart mobile backdrop */}
           <motion.div 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
-            className="lg:col-span-7 xl:col-span-7 flex flex-col items-start text-left max-w-xl"
+            className="lg:col-span-7 xl:col-span-7 flex flex-col items-start text-left max-w-xl bg-pluto-navy-deep/60 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none p-4 sm:p-0 rounded-2xl border border-white/10 sm:border-none shadow-lg sm:shadow-none"
           >
             
             {/* Small Top Label */}

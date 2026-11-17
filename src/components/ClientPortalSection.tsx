@@ -30,12 +30,12 @@ export const ClientPortalSection: React.FC = () => {
   ];
 
   return (
-    <section className="relative w-full py-10 sm:py-14 bg-white/85 backdrop-blur-sm overflow-hidden border-b border-slate-200/60">
+    <section className="relative w-full py-10 sm:py-14 bg-[#EAF3FF]/90 backdrop-blur-sm overflow-hidden border-b border-blue-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
-          {/* LEFT SIDE: Professional Illustration & Live Interactive Badges */}
+          {/* LEFT SIDE: Grand 3D Client Portal Illustration (image copy 16.png) */}
           <motion.div 
             initial={{ opacity: 0, x: -25 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -43,53 +43,30 @@ export const ClientPortalSection: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="lg:col-span-6 relative"
           >
-            {/* Visual Frame */}
+            {/* Grand Visual Frame with Glowing Depth */}
             <div 
               onClick={() => setIsPortalModalOpen(true)}
-              className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 bg-pluto-navy-deep group cursor-pointer"
+              className="relative rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(8,43,99,0.22)] border-2 border-white/80 bg-white group cursor-pointer ring-1 ring-blue-200 hover:ring-pluto-gold transition-all duration-300"
             >
               <img
-                src="/assets/client-portal.jpg"
-                alt="PlutoTax Secure Client Portal Dashboard"
-                className="w-full h-[260px] sm:h-[320px] object-cover filter brightness-[1.02] group-hover:scale-[1.03] transition-transform duration-700"
+                src="/assets/portal-grand-preview.png"
+                alt="PlutoTax Secure Client Portal Dashboard - Live Status & Encrypted Vault"
+                className="w-full h-auto object-cover filter brightness-[1.03] group-hover:scale-[1.02] transition-transform duration-500"
               />
 
-              {/* Floating Overlay Badge: Live Progress */}
-              <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-pluto-navy/90 backdrop-blur-md border border-pluto-gold/40 text-white p-2.5 sm:p-3 rounded-xl shadow-lg max-w-[240px]">
-                <div className="flex items-center gap-1.5 text-[11px] font-bold text-pluto-gold uppercase tracking-wider mb-0.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                  <span>Real-Time Filing Status</span>
-                </div>
-                <p className="text-xs text-slate-200 font-semibold truncate">
-                  {currentUser ? `${currentUser.name} - ${currentUser.filingStatus}` : "Ananya S. - CPA Review Active"}
-                </p>
-                <div className="w-full bg-slate-700/80 rounded-full h-1.5 mt-1.5 overflow-hidden">
-                  <div 
-                    className="bg-pluto-gold h-full rounded-full transition-all duration-1000"
-                    style={{ width: currentUser ? `${currentUser.progressPercent}%` : '65%' }}
-                  />
-                </div>
-              </div>
-
-              {/* Floating Overlay Badge: Security */}
-              <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 bg-white/95 backdrop-blur-md border border-slate-200 p-2.5 rounded-xl shadow-md flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
-                  <ShieldAlert className="w-4 h-4 text-emerald-600" />
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-slate-900 leading-none">256-Bit TLS Vault</div>
-                  <div className="text-[10px] text-slate-500 mt-0.5">IRS Section 7216</div>
-                </div>
-              </div>
-
               {/* Hover Quick Preview Button */}
-              <div className="absolute inset-0 bg-pluto-navy-deep/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <span className="inline-flex items-center gap-1.5 bg-white text-pluto-navy px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-lg">
-                  <Eye className="w-3.5 h-3.5 text-pluto-gold" />
-                  <span>Click for Interactive Portal Preview</span>
+              <div className="absolute inset-0 bg-pluto-navy-deep/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span className="inline-flex items-center gap-2 bg-white/95 text-pluto-navy px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-xl border border-pluto-gold/40">
+                  <Eye className="w-4 h-4 text-pluto-gold" />
+                  <span>Click for Interactive Portal Experience</span>
                 </span>
               </div>
             </div>
+
+            {/* Mobile quick caption */}
+            <p className="mt-2 text-center text-xs text-slate-500 lg:hidden">
+              Tap image above to open interactive portal preview
+            </p>
           </motion.div>
 
           {/* RIGHT SIDE: Heading, Description & Feature List */}
