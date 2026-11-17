@@ -43,14 +43,14 @@ export const ClientPortalSection: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="lg:col-span-6 relative"
           >
-            {/* Grand Visual Frame with Glowing Depth */}
+            {/* Grand 3D Visual Frame with Luxury Blue & Gold Ambient Glow */}
             <div 
               onClick={() => setIsPortalModalOpen(true)}
-              className="relative rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(8,43,99,0.22)] border-2 border-white/80 bg-white group cursor-pointer ring-1 ring-blue-200 hover:ring-pluto-gold transition-all duration-300"
+              className="relative rounded-2xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(8,43,99,0.3)] border-2 border-white/90 bg-white group cursor-pointer ring-2 ring-blue-300/80 hover:ring-pluto-gold hover:shadow-[0_30px_70px_-10px_rgba(255,191,0,0.3)] transition-all duration-300"
             >
               <img
                 src="/assets/portal-grand-preview.png"
-                alt="PlutoTax Secure Client Portal Dashboard - Live Status & Encrypted Vault"
+                alt="PlutoTax Secure Client Portal Dashboard - Live Status, Encrypted Vault & IRS CAA Certification"
                 className="w-full h-auto object-cover filter brightness-[1.03] group-hover:scale-[1.02] transition-transform duration-500"
               />
 

@@ -105,11 +105,20 @@ export const PortalPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-slate-50 min-h-screen">
+    <div className="w-full bg-[#EAF3FF]/40 min-h-screen">
       
-      {/* Top Header */}
-      <section className="bg-pluto-navy-deep text-white py-10 sm:py-14 border-b border-pluto-gold/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Top Header with image copy 24.png (Capitol Banner) */}
+      <section className="relative bg-pluto-navy-deep text-white py-12 sm:py-16 border-b border-blue-200/80 overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-30 filter contrast-110"
+          style={{
+            backgroundImage: `url('/assets/hero-capitol-banner.jpg'), url('/assets/hero-capitol-banner.png')`,
+            backgroundPosition: 'right 25% center',
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-pluto-navy-deep/95 via-pluto-navy-deep/85 to-pluto-navy-deep/60 pointer-events-none" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-slate-300 mb-3">
             <Breadcrumbs items={[{ name: 'Client Portal' }]} />
           </div>
@@ -118,7 +127,7 @@ export const PortalPage: React.FC = () => {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/10 text-pluto-gold text-xs font-bold uppercase tracking-wider mb-2 border border-pluto-gold/30">
                 <Lock className="w-3.5 h-3.5" />
-                <span>256-BIT ENCRYPTED CLIENT PORTAL</span>
+                <span>256-BIT ENCRYPTED CLIENT PORTAL & IRS AUTHORIZED CAA</span>
               </div>
               <h1 className="text-2xl sm:text-4xl font-extrabold text-white font-heading">
                 PlutoTax Client Dashboard
@@ -152,9 +161,34 @@ export const PortalPage: React.FC = () => {
         
         {!currentUser ? (
           /* =========================================================================
-              UNAUTHENTICATED: LOGIN OR REGISTER CARD
+              UNAUTHENTICATED: GRAND PORTAL 3D CARD + SIGN IN / REGISTER
               ========================================================================= */
-          <div className="max-w-md mx-auto bg-white rounded-3xl p-8 sm:p-10 shadow-xl border border-slate-200">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-6xl mx-auto">
+            
+            {/* Left Column: Grand 3D Client Portal Graphic (image copy 21.png) */}
+            <div className="lg:col-span-7">
+              <div className="rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(8,43,99,0.25)] border-2 border-white bg-white ring-2 ring-blue-300/80 group">
+                <img
+                  src="/assets/portal-grand-preview.png"
+                  alt="PlutoTax Secure Client Portal - 256-Bit Encryption & IRS CAA Verified"
+                  className="w-full h-auto object-cover filter brightness-[1.03] group-hover:scale-[1.02] transition-transform duration-500"
+                />
+              </div>
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-slate-600">
+                <span className="flex items-center gap-1.5 bg-white/90 px-3 py-1.5 rounded-xl border border-blue-200">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" /> IRS Section 7216 Protected
+                </span>
+                <span className="flex items-center gap-1.5 bg-white/90 px-3 py-1.5 rounded-xl border border-blue-200">
+                  <Lock className="w-4 h-4 text-pluto-navy" /> 256-Bit TLS Transmission
+                </span>
+                <span className="flex items-center gap-1.5 bg-white/90 px-3 py-1.5 rounded-xl border border-blue-200">
+                  <FileCheck className="w-4 h-4 text-amber-600" /> CPA Review Tracking
+                </span>
+              </div>
+            </div>
+
+            {/* Right Column: Sign In or Register Form */}
+            <div className="lg:col-span-5 bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-xl border border-blue-200">
             
             {/* Tabs */}
             <div className="flex border-b border-slate-200 mb-6">
@@ -311,6 +345,7 @@ export const PortalPage: React.FC = () => {
               <span>Encrypted via TLS 1.3 & AES-256 Bit Standards</span>
             </div>
           </div>
+        </div>
         ) : (
           /* =========================================================================
               AUTHENTICATED DASHBOARD

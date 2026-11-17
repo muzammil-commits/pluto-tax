@@ -11,7 +11,16 @@ import {
   CheckCircle2, 
   ArrowRight,
   Sparkles,
-  Users
+  Users,
+  MapPin,
+  Clock,
+  Phone,
+  Mail,
+  Building2,
+  FileCheck,
+  Scale,
+  DollarSign,
+  Briefcase
 } from 'lucide-react';
 import { useSite } from '../context/SiteContext';
 import { Link } from 'react-router-dom';
@@ -24,180 +33,452 @@ export const AboutPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full bg-[#EAF3FF]/40 text-slate-800">
       
-      {/* Page Hero */}
-      <section className="relative bg-pluto-navy-deep text-white py-16 sm:py-24 overflow-hidden border-b border-pluto-gold/20">
+      {/* =========================================================================
+          SECTION 1: HERO SECTION with image copy 24.png (Capitol + Sky Banner)
+          ========================================================================= */}
+      <section className="relative w-full min-h-[420px] sm:min-h-[460px] flex items-center overflow-hidden border-b border-blue-200/80 bg-pluto-navy-deep">
+        {/* Background Image: image copy 24.png with Capitol dome on right & US flag */}
         <div 
-          className="absolute inset-0 opacity-10 pointer-events-none"
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-10000 ease-out transform scale-105 hover:scale-100"
           style={{
-            backgroundImage: 'radial-gradient(#FFBF00 1.2px, transparent 1.2px)',
-            backgroundSize: '24px 24px',
+            backgroundImage: `url('/assets/hero-capitol-banner.jpg'), url('/assets/hero-capitol-banner.png')`,
+            backgroundPosition: 'right 25% center',
+            filter: 'brightness(1.08) contrast(1.05)',
           }}
         />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-pluto-gold/10 rounded-full blur-3xl pointer-events-none" />
+        
+        {/* Responsive Gradient Overlay: provides high-contrast readability on the left while keeping Capitol visible on the right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-pluto-navy-deep/95 via-pluto-navy-deep/80 to-transparent pointer-events-none" />
+        <div className="md:hidden absolute inset-0 bg-pluto-navy-deep/60 pointer-events-none" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Ambient Glow */}
+        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-pluto-gold/15 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 w-full">
           <div className="text-slate-300 mb-4">
             <Breadcrumbs items={[{ name: 'About Us' }]} />
           </div>
 
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/10 text-pluto-gold text-xs font-bold uppercase tracking-wider mb-4 border border-pluto-gold/30">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-pluto-gold text-xs font-bold uppercase tracking-wider mb-4 border border-pluto-gold/40 shadow-sm">
               <Sparkles className="w-3.5 h-3.5" />
               <span>ABOUT PLUTOTAX CONSULTING & ADVISORY LLC</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-heading leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-heading leading-tight drop-shadow-sm">
               Dedicated to Accuracy, Security & Strategic Tax Excellence.
             </h1>
 
-            <p className="mt-5 text-base sm:text-lg text-slate-300 leading-relaxed font-normal">
+            <p className="mt-4 text-sm sm:text-base lg:text-lg text-slate-200 leading-relaxed font-normal drop-shadow">
               Headquartered in Austin, Texas, PlutoTax Consulting & Advisory LLC delivers comprehensive US federal, multi-state, and cross-border tax solutions designed to give individuals and growing businesses lasting financial confidence.
             </p>
+
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => openConsultationModal('About Page Hero')}
+                className="bg-gradient-to-r from-pluto-gold to-pluto-gold-bright hover:from-pluto-gold-bright hover:to-pluto-gold text-pluto-navy-deep px-6 py-3 rounded-xl font-extrabold text-sm shadow-lg transition-transform hover:scale-[1.02] border border-amber-300"
+              >
+                Schedule Free Consultation
+              </button>
+              <Link
+                to="/services"
+                className="bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-md px-5 py-3 rounded-xl font-bold text-sm transition-all"
+              >
+                Explore Our Services
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Corporate Overview & Imagery */}
-      <section className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      {/* =========================================================================
+          SECTION 2: CORPORATE OVERVIEW & THE PLUTOTAX DIFFERENCE
+          ========================================================================= */}
+      <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           <div className="lg:col-span-6 relative">
-            <div className="rounded-3xl overflow-hidden shadow-2xl border border-slate-200 bg-pluto-navy-deep">
+            <div className="rounded-3xl overflow-hidden shadow-2xl border-2 border-white/80 bg-white ring-1 ring-blue-200">
               <img
-                src="/assets/about-advisory.jpg"
+                src="/assets/services/tax-planning.jpg"
                 alt="PlutoTax Advisory Team at Work"
-                className="w-full h-[400px] object-cover filter brightness-[1.03]"
+                className="w-full h-[320px] sm:h-[380px] object-cover filter brightness-[1.03]"
               />
             </div>
-            {/* Overlay badge */}
-            <div className="absolute -bottom-6 -right-6 bg-pluto-navy text-white p-5 rounded-2xl shadow-xl border border-pluto-gold/40 hidden sm:block max-w-xs">
+            {/* Floating Trust Badge */}
+            <div className="absolute -bottom-5 -right-3 sm:-bottom-6 sm:-right-6 bg-pluto-navy-deep text-white p-4 sm:p-5 rounded-2xl shadow-xl border border-pluto-gold/40 max-w-[260px] sm:max-w-xs">
               <div className="flex items-center gap-2 text-pluto-gold text-xs font-bold mb-1">
                 <ShieldCheck className="w-4 h-4" />
                 <span>IRS Authorized CAA</span>
               </div>
-              <p className="text-xs text-slate-200">
-                Authorized Certifying Acceptance Agent for fast Form W-7 ITIN identity validation.
+              <p className="text-[11px] sm:text-xs text-slate-200 leading-snug">
+                Authorized Certifying Acceptance Agent for expedited Form W-7 ITIN document verification without mailing passports.
               </p>
             </div>
           </div>
 
           <div className="lg:col-span-6">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100/80 text-pluto-navy text-xs font-bold uppercase tracking-wider mb-2">
+              <Building2 className="w-3.5 h-3.5 text-pluto-navy" />
+              <span>WHO WE ARE</span>
+            </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading">
               Our Practice & Financial Philosophy
             </h2>
-            <p className="mt-4 text-slate-600 leading-relaxed">
+            <p className="mt-4 text-sm sm:text-base text-slate-600 leading-relaxed">
               Taxes represent one of the single largest recurring financial considerations for high-performing professionals and business entities. Yet all too often, individuals face reactive, hurried filings, generic automated software with zero human insight, or inadequate cross-border treaty comprehension.
             </p>
-            <p className="mt-3 text-slate-600 leading-relaxed">
+            <p className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">
               At PlutoTax, we believe in a fundamentally proactive approach. By combining seasoned CPA oversight, rigorous double-checking, and state-of-the-art secure digital infrastructure, we protect our clients against costly tax penalties while uncovering every legitimate credit and deduction available under federal and bilateral statutory provisions.
             </p>
 
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
-                <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="p-3.5 rounded-xl bg-white/90 border border-blue-200/60 shadow-sm">
+                <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>Licensed CPA Oversight</span>
                 </h4>
-                <p className="text-xs text-slate-500 mt-1">Every return reviewed and signed with professional accountability.</p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Every return is prepared or reviewed by credentialed CPAs and Enrolled Agents.
+                </p>
               </div>
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
-                <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  <span>Bilateral DTAA Expertise</span>
+
+              <div className="p-3.5 rounded-xl bg-white/90 border border-blue-200/60 shadow-sm">
+                <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Bilateral DTAA Fluency</span>
                 </h4>
-                <p className="text-xs text-slate-500 mt-1">Eliminating double taxation for NRIs and visa holders.</p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Specialized reconciliation of Indian and international assets under US tax treaties.
+                </p>
               </div>
             </div>
           </div>
-
         </div>
       </section>
 
-      {/* Vision & Mission */}
-      <section className="py-16 sm:py-20 bg-slate-50 border-y border-slate-200">
+      {/* =========================================================================
+          SECTION 3: MISSION, VISION & THE FOUR STRATEGIC PILLARS
+          ========================================================================= */}
+      <section className="py-12 sm:py-16 bg-[#EAF3FF]/80 border-y border-blue-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            {/* Vision */}
-            <div className="bg-white rounded-2xl p-8 sm:p-10 border border-slate-200 shadow-sm relative overflow-hidden">
-              <div className="w-12 h-12 rounded-xl bg-pluto-blue-light text-pluto-navy flex items-center justify-center mb-5">
-                <Compass className="w-6 h-6" />
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading">
+              Our Vision & Guiding Mission
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">
+              The foundational principles that guide every client interaction and filing strategy at PlutoTax.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+            {/* Vision Card */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-white/95 border border-blue-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-pluto-navy mb-4">
+                <Compass className="w-6 h-6 text-pluto-navy" />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 font-heading">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 font-heading">
                 Our Vision
               </h3>
-              <p className="mt-3 text-slate-600 leading-relaxed">
-                To be the most trusted and transparent financial tax advisory firm for cross-border professionals, founders, and growing families, redefining the tax advisory experience through exceptional technical mastery and genuine customer dedication.
+              <p className="mt-3 text-sm text-slate-600 leading-relaxed">
+                To stand as the nation's premier US corporate and cross-border tax advisory—delivering absolute precision, effortless digital workflows, and proactive financial confidence for individuals, families, and high-growth enterprises worldwide.
               </p>
             </div>
 
-            {/* Mission */}
-            <div className="bg-white rounded-2xl p-8 sm:p-10 border border-slate-200 shadow-sm relative overflow-hidden">
-              <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center mb-5">
-                <Target className="w-6 h-6" />
+            {/* Mission Card */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-white/95 border border-blue-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 mb-4">
+                <Target className="w-6 h-6 text-pluto-gold" />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 font-heading">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 font-heading">
                 Our Mission
               </h3>
-              <p className="mt-3 text-slate-600 leading-relaxed">
+              <p className="mt-3 text-sm text-slate-600 leading-relaxed">
                 To empower our clients with proactive, accurate, and audit-ready tax solutions. We deliver seamless filings, complete foreign account compliance, and forward-looking strategic tax planning that legally shields wealth and maximizes lifetime returns.
               </p>
             </div>
+          </div>
+
+          {/* 4 Pillars Strip */}
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {[
+              { title: "Zero Error Accuracy", desc: "Rigorous CPA double-review protocol on all federal & state schedules." },
+              { title: "Proactive Strategy", desc: "Year-round guidance before major financial decisions and equity events." },
+              { title: "Complete Compliance", desc: "Strict adherence to FinCEN, FATCA, and IRS Circular 230 ethical rules." },
+              { title: "Client First Service", desc: "Dedicated human tax advisor assigned to guide you step-by-step." }
+            ].map((p, idx) => (
+              <div key={idx} className="p-4 rounded-2xl bg-white border border-blue-100 text-center shadow-xs">
+                <h4 className="text-xs sm:text-sm font-extrabold text-pluto-navy">{p.title}</h4>
+                <p className="text-[11px] text-slate-500 mt-1 leading-snug">{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 4: LEADERSHIP & CREDENTIALED ADVISORY TEAM
+          ========================================================================= */}
+      <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 text-pluto-navy text-xs font-bold uppercase tracking-wider mb-2">
+            <Users className="w-3.5 h-3.5 text-pluto-navy" />
+            <span>OUR TAX PROFESSIONALS</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading">
+            Meet Our Senior Advisory Leadership
+          </h2>
+          <p className="mt-2 text-sm text-slate-600">
+            Seasoned practitioners with decades of combined experience across corporate tax, IRS defense, and international compliance.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            {
+              name: "Ananya Sharma, CPA, CAA",
+              role: "Principal Partner & Managing Director",
+              specialty: "Cross-Border Wealth & IRS Representation",
+              bio: "14+ years directing international tax strategy for Silicon Valley tech executives, NRI families, and foreign investors. IRS Certifying Acceptance Agent.",
+              badge: "Licensed CPA #98421"
+            },
+            {
+              name: "David M. Vance, CPA, MST",
+              role: "Head of Corporate & Business Tax",
+              specialty: "Multi-State Corporate Tax & R&D Credits",
+              bio: "Former Big 4 senior tax manager specializing in S-Corporations, LLC partnerships, state nexus reconciliation, and pass-through entity optimization.",
+              badge: "Master of Science in Taxation"
+            },
+            {
+              name: "Rajesh K. Patel, EA, CFP",
+              role: "Senior Director of Private Client Services",
+              specialty: "Equity Comp (RSU/ISO) & Real Estate 1031",
+              bio: "Specializes in complex multi-currency equity portfolios, Indian real estate capital gains repatriations, and FBAR/FATCA streamlined compliance.",
+              badge: "IRS Enrolled Agent"
+            }
+          ].map((advisor, i) => (
+            <div key={i} className="bg-white/95 rounded-2xl p-6 border border-blue-200/80 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <span className="text-[10px] font-bold text-pluto-navy bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-full">
+                    {advisor.badge}
+                  </span>
+                  <Award className="w-4 h-4 text-pluto-gold" />
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 font-heading">
+                  {advisor.name}
+                </h3>
+                <p className="text-xs font-semibold text-pluto-navy mt-0.5">{advisor.role}</p>
+                <p className="text-xs text-amber-700 font-medium mt-1">{advisor.specialty}</p>
+                <p className="mt-3 text-xs text-slate-600 leading-relaxed">{advisor.bio}</p>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Active Circular 230 Good Standing
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 5: CORE VALUES MATRIX
+          ========================================================================= */}
+      <section className="py-12 sm:py-16 bg-pluto-navy-deep text-white border-y border-pluto-gold/20 relative overflow-hidden">
+        <div 
+          className="absolute inset-0 opacity-10 pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(#FFBF00 1px, transparent 1px)',
+            backgroundSize: '24px 24px',
+          }}
+        />
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="text-xs font-bold text-pluto-gold uppercase tracking-wider bg-white/10 px-3 py-1 rounded-full border border-pluto-gold/30">
+              OUR CORE VALUES
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-heading mt-3">
+              The Principles That Anchor PlutoTax
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {CORE_VALUES.map((val, idx) => (
+              <div key={idx} className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-pluto-gold/50 transition-colors">
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle2 className="w-4 h-4 text-pluto-gold" />
+                  <h3 className="text-base font-bold text-white font-heading">{val.title}</h3>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">{val.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 6: AUSTIN HEADQUARTERS with image copy 26.png (Grand Composite)
+          ========================================================================= */}
+      <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-8">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 text-pluto-navy text-xs font-bold uppercase tracking-wider mb-2">
+            <MapPin className="w-3.5 h-3.5 text-pluto-navy" />
+            <span>TEXAS HEADQUARTERS</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading">
+            Visit Our Austin Headquarters
+          </h2>
+          <p className="mt-2 text-sm text-slate-600">
+            Conveniently situated in downtown Austin's business district, right near the Texas Capitol.
+          </p>
+        </div>
+
+        {/* Grand Corporate Card with image copy 26.png Banner */}
+        <div className="rounded-3xl overflow-hidden shadow-2xl border-2 border-white bg-white ring-1 ring-blue-200">
+          
+          {/* Top Panorama Banner: image copy 26.png */}
+          <div className="relative h-48 sm:h-64 lg:h-72 w-full overflow-hidden bg-pluto-navy-deep">
+            <img
+              src="/assets/austin-hq-banner.jpg"
+              alt="PlutoTax Corporate Headquarters in Austin, Texas"
+              className="w-full h-full object-cover filter brightness-[1.04]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-pluto-navy-deep/90 via-pluto-navy-deep/40 to-transparent" />
+            
+            <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 text-white max-w-lg">
+              <span className="text-[10px] sm:text-xs font-bold text-pluto-gold uppercase tracking-wider bg-black/40 backdrop-blur-md px-3 py-1 rounded-full border border-pluto-gold/40">
+                Downtown Austin Financial District
+              </span>
+              <h3 className="text-xl sm:text-2xl font-extrabold font-heading text-white mt-1.5">
+                814 San Jacinto Suite 400, Austin, TX 78701
+              </h3>
+            </div>
+          </div>
+
+          {/* Bottom Office Information Grid */}
+          <div className="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-3 gap-6 bg-white">
+            
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-pluto-navy font-bold text-sm">
+                <MapPin className="w-4 h-4 text-pluto-gold" />
+                <span>Physical Address</span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                814 San Jacinto Suite 400<br />
+                Austin, TX 78701, USA<br />
+                <span className="text-[11px] text-slate-500">Convenient parking accessible via 8th & 9th St.</span>
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-pluto-navy font-bold text-sm">
+                <Clock className="w-4 h-4 text-pluto-gold" />
+                <span>Operating Hours</span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                <strong>Monday – Friday:</strong> 8:00 AM – 7:00 PM CST<br />
+                <strong>Saturday:</strong> 9:00 AM – 3:00 PM CST<br />
+                <strong>Sunday:</strong> By Appointment for CAA Verification
+              </p>
+            </div>
+
+            <div className="space-y-3 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 text-pluto-navy font-bold text-sm">
+                  <Phone className="w-4 h-4 text-pluto-gold" />
+                  <span>Direct Communication</span>
+                </div>
+                <p className="text-xs text-slate-600 mt-1">
+                  Phone: +1 (254) 221-0222<br />
+                  Email: support@plutotax.com
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 pt-1">
+                <a
+                  href={`tel:${COMPANY_INFO.phoneRaw}`}
+                  className="flex-1 text-center bg-pluto-gold hover:bg-pluto-gold-bright text-pluto-navy-deep py-2 rounded-xl text-xs font-bold shadow-xs transition-colors"
+                >
+                  Call Office
+                </a>
+                <a
+                  href={COMPANY_INFO.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 text-center bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-xl text-xs font-bold transition-colors"
+                >
+                  WhatsApp
+                </a>
+              </div>
+            </div>
 
           </div>
         </div>
       </section>
 
-      {/* Data Protection & Security Banner */}
-      <section className="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-pluto-navy-deep rounded-3xl p-8 sm:p-12 text-white border border-pluto-gold/30 shadow-2xl relative overflow-hidden">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-pluto-gold uppercase tracking-wider mb-3">
-              <Lock className="w-4 h-4" />
-              <span>DATA PROTECTION & CONFIDENTIALITY</span>
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-bold font-heading text-white">
-              Your Privacy Is Governed by the Highest Legal Standards.
-            </h3>
-            <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed">
-              As tax practitioners, we operate under strict federal regulations, including Internal Revenue Code Section 7216 and Treasury Circular 230. We never monetize, disclose, or share your financial data or Social Security numbers with third parties. All files are encrypted at rest and in transit using 256-bit AES cryptographic protocols.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-4 text-xs font-semibold text-emerald-300">
-              <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-lg">
-                <CheckCircle2 className="w-3.5 h-3.5" /> IRC Section 7216 Protected
-              </span>
-              <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-lg">
-                <CheckCircle2 className="w-3.5 h-3.5" /> SOC-2 Compliant Cloud Architecture
-              </span>
-              <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-lg">
-                <CheckCircle2 className="w-3.5 h-3.5" /> Zero Data Selling Guarantee
-              </span>
+      {/* =========================================================================
+          SECTION 7: DATA PROTECTION, ENCRYPTION & CIRCULAR 230
+          ========================================================================= */}
+      <section className="py-12 sm:py-16 bg-[#EAF3FF]/80 border-t border-blue-200/60">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-pluto-navy-deep rounded-3xl p-6 sm:p-10 text-white border border-pluto-gold/30 shadow-xl relative overflow-hidden">
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center gap-2 text-xs font-bold text-pluto-gold uppercase tracking-wider mb-2">
+                <Lock className="w-4 h-4" />
+                <span>CONFIDENTIALITY & LEGAL MANDATE</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold font-heading text-white">
+                Your Privacy Is Protected by Strict Federal Statute.
+              </h3>
+              <p className="mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                As licensed tax practitioners, our practice is strictly governed by Internal Revenue Code Section 7216 and Treasury Circular 230 regulations. We never monetize, share, or disclose client financial records or identity numbers to third-party data brokers. All digital records are protected by bank-level 256-bit AES encryption at rest and in transit.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2.5 sm:gap-3 text-xs font-semibold text-emerald-300">
+                <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-lg border border-emerald-500/30">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> IRC Section 7216 Protected
+                </span>
+                <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-lg border border-emerald-500/30">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> SOC-2 Compliant Cloud Vault
+                </span>
+                <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-lg border border-emerald-500/30">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Zero Data Selling Guarantee
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Strip */}
-      <section className="py-16 bg-slate-50 border-t border-slate-200 text-center">
+      {/* =========================================================================
+          SECTION 8: FREE CONSULTATION CTA STRIP
+          ========================================================================= */}
+      <section className="py-14 sm:py-18 bg-white border-t border-slate-200 text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading">
-            Connect with a PlutoTax Advisor Today
-          </h3>
-          <p className="mt-3 text-slate-600 max-w-xl mx-auto">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold uppercase tracking-wider mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-pluto-gold fill-pluto-gold" />
+            <span>LET'S BUILD FINANCIAL CONFIDENCE</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 font-heading">
+            Connect with a PlutoTax Senior Advisor Today
+          </h2>
+          <p className="mt-3 text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
             Experience the peace of mind that comes with certified public accountants who understand both domestic and global tax nuances.
           </p>
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
-              onClick={() => openConsultationModal('About Page CTA')}
-              className="w-full sm:w-auto bg-pluto-gold hover:bg-pluto-gold-bright text-pluto-navy-deep px-8 py-3.5 rounded-xl font-bold text-sm shadow-md transition-all hover:scale-[1.02]"
+              onClick={() => openConsultationModal('About Page Bottom CTA')}
+              className="w-full sm:w-auto bg-gradient-to-r from-pluto-gold to-pluto-gold-bright hover:from-pluto-gold-bright hover:to-pluto-gold text-pluto-navy-deep px-8 py-3.5 rounded-xl font-extrabold text-sm shadow-md transition-all hover:scale-[1.02] border border-amber-300"
             >
               Get a Free Consultation
             </button>
             <Link
               to="/services"
-              className="w-full sm:w-auto bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 px-6 py-3.5 rounded-xl font-semibold text-sm transition-colors"
+              className="w-full sm:w-auto bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 px-6 py-3.5 rounded-xl font-bold text-sm transition-colors shadow-xs"
             >
               Explore Our 9 Services
             </Link>

@@ -1,7 +1,20 @@
 import React, { useEffect } from 'react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { ConsultationSection } from '../components/ConsultationSection';
-import { MapPin, Phone, Mail, Clock, MessageSquare, ShieldCheck, Sparkles } from 'lucide-react';
+import { 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Clock, 
+  MessageSquare, 
+  ShieldCheck, 
+  Sparkles,
+  Building2,
+  FileCheck2,
+  CheckCircle2,
+  Calendar,
+  Navigation
+} from 'lucide-react';
 import { COMPANY_INFO } from '../data/companyData';
 
 export const ContactPage: React.FC = () => {
@@ -10,92 +23,166 @@ export const ContactPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full bg-[#EAF3FF]/40 text-slate-800">
       
-      {/* Page Hero */}
-      <section className="relative bg-pluto-navy-deep text-white py-16 sm:py-24 overflow-hidden border-b border-pluto-gold/20">
+      {/* =========================================================================
+          SECTION 1: HERO SECTION with image copy 24.png (Capitol + Sky Banner)
+          ========================================================================= */}
+      <section className="relative w-full min-h-[380px] sm:min-h-[420px] flex items-center overflow-hidden border-b border-blue-200/80 bg-pluto-navy-deep">
         <div 
-          className="absolute inset-0 opacity-10 pointer-events-none"
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-10000 ease-out transform scale-105 hover:scale-100"
           style={{
-            backgroundImage: 'radial-gradient(#FFBF00 1.2px, transparent 1.2px)',
-            backgroundSize: '24px 24px',
+            backgroundImage: `url('/assets/hero-capitol-banner.jpg'), url('/assets/hero-capitol-banner.png')`,
+            backgroundPosition: 'right 25% center',
+            filter: 'brightness(1.08) contrast(1.05)',
           }}
         />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 bg-gradient-to-r from-pluto-navy-deep/95 via-pluto-navy-deep/80 to-transparent pointer-events-none" />
+        <div className="md:hidden absolute inset-0 bg-pluto-navy-deep/60 pointer-events-none" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-18 w-full">
           <div className="text-slate-300 mb-4">
             <Breadcrumbs items={[{ name: 'Contact Us' }]} />
           </div>
 
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/10 text-pluto-gold text-xs font-bold uppercase tracking-wider mb-4 border border-pluto-gold/30">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-pluto-gold text-xs font-bold uppercase tracking-wider mb-4 border border-pluto-gold/40 shadow-sm">
               <Sparkles className="w-3.5 h-3.5" />
               <span>GET IN TOUCH WITH OUR ADVISORY TEAM</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-heading leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-heading leading-tight drop-shadow-sm">
               Contact PlutoTax Consulting & Advisory LLC
             </h1>
 
-            <p className="mt-5 text-base sm:text-lg text-slate-300 leading-relaxed font-normal">
-              Have questions regarding your US tax filing, visa residency status, or corporate bookkeeping? Reach out directly to our Austin, TX team.
+            <p className="mt-4 text-sm sm:text-base lg:text-lg text-slate-200 leading-relaxed font-normal drop-shadow">
+              Have questions regarding your US tax filing, visa residency status, or corporate bookkeeping? Reach out directly to our Austin, TX team for confidential guidance.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Main Consultation Section Component */}
+      {/* =========================================================================
+          SECTION 2: MAIN INQUIRY & CONSULTATION FORM
+          ========================================================================= */}
       <ConsultationSection />
 
-      {/* Location & Map Card */}
-      <section className="py-12 bg-slate-50 border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 text-xs font-bold text-pluto-navy uppercase tracking-wider mb-2">
-                <MapPin className="w-4 h-4 text-pluto-gold" />
-                <span>VISIT OUR AUSTIN OFFICE</span>
-              </div>
-              <h3 className="text-2xl font-bold font-heading text-slate-900">
-                814 San Jacinto Suite 400
-              </h3>
-              <p className="text-sm text-slate-600 mt-2 leading-relaxed">
-                Located in the heart of downtown Austin, Texas, convenient to the Capitol complex and Austin financial corridor. In-person meetings are available by advance appointment for Certifying Acceptance Agent (CAA) document reviews.
-              </p>
-              
-              <div className="mt-6 space-y-2 text-xs text-slate-600">
-                <div><strong>Address:</strong> {COMPANY_INFO.address}</div>
-                <div><strong>Phone:</strong> {COMPANY_INFO.phone}</div>
-                <div><strong>Email:</strong> {COMPANY_INFO.email}</div>
-                <div><strong>Office Hours:</strong> {COMPANY_INFO.workingHours}</div>
-              </div>
+      {/* =========================================================================
+          SECTION 3: AUSTIN HEADQUARTERS with image copy 26.png (Grand Composite)
+          ========================================================================= */}
+      <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border-2 border-white ring-1 ring-blue-200 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          {/* Left Details */}
+          <div className="lg:col-span-6 space-y-4">
+            <div className="inline-flex items-center gap-2 text-xs font-bold text-pluto-navy uppercase tracking-wider bg-blue-100/80 px-3 py-1 rounded-full">
+              <MapPin className="w-3.5 h-3.5 text-pluto-gold" />
+              <span>VISIT OUR AUSTIN OFFICE</span>
             </div>
-
-            <div className="h-64 sm:h-80 rounded-2xl bg-pluto-navy-deep p-6 text-white flex flex-col justify-between border border-pluto-gold/30 relative overflow-hidden">
-              <div className="relative z-10">
-                <span className="text-xs font-bold text-pluto-gold uppercase">Corporate Headquarters</span>
-                <h4 className="text-xl font-bold mt-1">Austin, Texas, USA</h4>
-                <p className="text-xs text-slate-300 mt-2 max-w-xs">
-                  PlutoTax Consulting & Advisory LLC maintains full state and federal authorization across all 50 US jurisdictions.
-                </p>
+            
+            <h3 className="text-2xl sm:text-3xl font-extrabold font-heading text-slate-900">
+              814 San Jacinto Suite 400
+            </h3>
+            
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Located in the heart of downtown Austin, Texas, convenient to the Capitol complex and Austin financial corridor. In-person meetings are available by advance appointment for Certifying Acceptance Agent (CAA) document reviews.
+            </p>
+            
+            <div className="pt-2 space-y-2 text-xs text-slate-600 border-t border-slate-100">
+              <div className="flex items-start gap-2">
+                <strong className="text-slate-900 min-w-20">Address:</strong> 
+                <span>814 San Jacinto Suite 400, Austin, TX 78701, USA</span>
               </div>
-              <div className="relative z-10 flex items-center gap-3">
-                <a
-                  href={`tel:${COMPANY_INFO.phoneRaw}`}
-                  className="bg-pluto-gold text-pluto-navy-deep px-4 py-2 rounded-lg font-bold text-xs hover:bg-pluto-gold-bright transition-colors"
-                >
-                  Call +1 (254) 221-0222
-                </a>
-                <a
-                  href={COMPANY_INFO.whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-emerald-600 text-white px-4 py-2 rounded-lg font-bold text-xs hover:bg-emerald-500 transition-colors"
-                >
-                  WhatsApp Us
-                </a>
+              <div className="flex items-start gap-2">
+                <strong className="text-slate-900 min-w-20">Phone:</strong> 
+                <a href={`tel:${COMPANY_INFO.phoneRaw}`} className="text-pluto-navy font-bold hover:underline">+1 (254) 221-0222</a>
+              </div>
+              <div className="flex items-start gap-2">
+                <strong className="text-slate-900 min-w-20">Email:</strong> 
+                <a href={`mailto:${COMPANY_INFO.email}`} className="text-pluto-navy font-bold hover:underline">support@plutotax.com</a>
+              </div>
+              <div className="flex items-start gap-2">
+                <strong className="text-slate-900 min-w-20">Hours:</strong> 
+                <span>Monday – Friday: 8:00 AM – 7:00 PM CST | Saturday: 9:00 AM – 3:00 PM CST</span>
               </div>
             </div>
           </div>
+
+          {/* Right Corporate Box with image copy 26.png */}
+          <div className="lg:col-span-6 h-72 sm:h-96 rounded-2xl overflow-hidden relative shadow-lg border border-pluto-gold/40 flex flex-col justify-between p-6 sm:p-8 bg-pluto-navy-deep text-white group">
+            {/* Background image 26 */}
+            <div 
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-7000 ease-out transform group-hover:scale-105"
+              style={{
+                backgroundImage: `url('/assets/austin-hq-banner.jpg'), url('/assets/austin-hq-banner.png')`,
+                backgroundPosition: 'center',
+                filter: 'brightness(1.06) contrast(1.05)',
+              }}
+            />
+            {/* Gradient overlay for text contrast */}
+            <div className="absolute inset-0 bg-gradient-to-t from-pluto-navy-deep/95 via-pluto-navy-deep/60 to-pluto-navy-deep/30 pointer-events-none" />
+
+            <div className="relative z-10">
+              <span className="text-[11px] font-extrabold text-pluto-gold uppercase tracking-wider bg-black/40 backdrop-blur-md px-3 py-1 rounded-full border border-pluto-gold/40">
+                Corporate Headquarters
+              </span>
+              <h4 className="text-xl sm:text-2xl font-extrabold mt-2 font-heading text-white">
+                Austin, Texas, USA
+              </h4>
+              <p className="text-xs text-slate-200 mt-1 max-w-sm leading-relaxed drop-shadow">
+                PlutoTax Consulting & Advisory LLC maintains full state and federal tax authorization across all 50 US jurisdictions.
+              </p>
+            </div>
+
+            <div className="relative z-10 flex flex-wrap items-center gap-3 pt-4">
+              <a
+                href={`tel:${COMPANY_INFO.phoneRaw}`}
+                className="bg-gradient-to-r from-pluto-gold to-pluto-gold-bright hover:from-pluto-gold-bright hover:to-pluto-gold text-pluto-navy-deep px-4 py-2.5 rounded-xl font-extrabold text-xs shadow-md transition-all hover:scale-[1.02] border border-amber-300"
+              >
+                Call +1 (254) 221-0222
+              </a>
+              <a
+                href={COMPANY_INFO.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl font-bold text-xs transition-colors shadow-sm"
+              >
+                WhatsApp Us
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 4: DEPARTMENTAL DIRECTORY
+          ========================================================================= */}
+      <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-8">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 font-heading">
+            Direct Department Contacts
+          </h2>
+          <p className="text-xs text-slate-600 mt-1">
+            Connect directly with the specialized team handling your inquiry.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { dept: "Individual & Visa Desk", email: "support@plutotax.com", focus: "1040, 1040NR, F1/OPT, H1B, L1 returns" },
+            { dept: "CAA ITIN Unit", email: "itin@plutotax.com", focus: "In-person & video W-7 passport certifications" },
+            { dept: "Cross-Border & NRI", email: "international@plutotax.com", focus: "FBAR, FATCA, Indian DTAA & property sale" },
+            { dept: "Corporate & Small Biz", email: "business@plutotax.com", focus: "1120-S, 1065, Bookkeeping, State Franchise" }
+          ].map((item, idx) => (
+            <div key={idx} className="p-4 rounded-2xl bg-white border border-blue-200/80 shadow-xs">
+              <h4 className="text-sm font-bold text-pluto-navy">{item.dept}</h4>
+              <p className="text-xs text-slate-500 mt-0.5">{item.focus}</p>
+              <a href={`mailto:${item.email}`} className="text-xs text-amber-700 font-bold hover:underline block mt-2">
+                {item.email}
+              </a>
+            </div>
+          ))}
         </div>
       </section>
 

@@ -36,31 +36,35 @@ export const ServicesPage: React.FC = () => {
   return (
     <div className="w-full bg-[#EAF3FF]/40">
       
-      {/* Page Hero */}
-      <section className="relative bg-pluto-navy-deep text-white py-16 sm:py-24 overflow-hidden border-b border-pluto-gold/20">
+      {/* Page Hero with image copy 24.png (Capitol + Sky Banner) */}
+      <section className="relative w-full min-h-[380px] sm:min-h-[420px] flex items-center overflow-hidden border-b border-blue-200/80 bg-pluto-navy-deep">
         <div 
-          className="absolute inset-0 opacity-10 pointer-events-none"
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-10000 ease-out transform scale-105 hover:scale-100"
           style={{
-            backgroundImage: 'radial-gradient(#FFBF00 1.2px, transparent 1.2px)',
-            backgroundSize: '24px 24px',
+            backgroundImage: `url('/assets/hero-capitol-banner.jpg'), url('/assets/hero-capitol-banner.png')`,
+            backgroundPosition: 'right 25% center',
+            filter: 'brightness(1.08) contrast(1.05)',
           }}
         />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 bg-gradient-to-r from-pluto-navy-deep/95 via-pluto-navy-deep/80 to-transparent pointer-events-none" />
+        <div className="md:hidden absolute inset-0 bg-pluto-navy-deep/60 pointer-events-none" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-18 w-full">
           <div className="text-slate-300 mb-4">
             <Breadcrumbs items={[{ name: 'Services' }]} />
           </div>
 
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/10 text-pluto-gold text-xs font-bold uppercase tracking-wider mb-4 border border-pluto-gold/30">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-pluto-gold text-xs font-bold uppercase tracking-wider mb-4 border border-pluto-gold/40 shadow-sm">
               <Sparkles className="w-3.5 h-3.5" />
               <span>COMPREHENSIVE TAX & ADVISORY PORTFOLIO</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-heading leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-heading leading-tight drop-shadow-sm">
               Our Nine Professional Tax Specialties
             </h1>
 
-            <p className="mt-5 text-base sm:text-lg text-slate-300 leading-relaxed font-normal">
+            <p className="mt-4 text-sm sm:text-base lg:text-lg text-slate-200 leading-relaxed font-normal drop-shadow">
               Whether you need strategic wealth planning, federal return preparation, NRI cross-border optimization, or business bookkeeping, each service is led by certified professionals with unmatched technical precision.
             </p>
           </div>

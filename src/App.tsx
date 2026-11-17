@@ -30,17 +30,36 @@ export function App() {
           <div className="relative min-h-screen bg-[#EAF3FF] text-slate-800 selection:bg-pluto-gold selection:text-pluto-navy-deep overflow-x-hidden">
             
             {/* =========================================================================
-                GLOBAL WHOLE-WEBSITE BACKGROUND: image copy 5.png
-                Set across the entire website on both desktop and mobile view
+                GLOBAL WHOLE-WEBSITE ANIMATED BACKGROUND:
+                Desktop View: image copy 5.png (Ultra-wide flowing blue waves)
+                Mobile View: image copy 27.png (Portrait cyan/blue waves with gold ribbons)
                 ========================================================================= */}
+            {/* Desktop Background */}
             <div 
-              className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center md:bg-fixed opacity-35 filter contrast-105"
+              className="hidden md:block fixed inset-0 pointer-events-none z-0 bg-cover bg-center bg-fixed opacity-40 filter contrast-105 transition-all duration-1000 animate-pulse-subtle"
               style={{
-                backgroundImage: `url('/assets/site-bg.jpg'), url('/assets/site-bg.png')`,
+                backgroundImage: `url('/assets/site-bg-desktop.jpg'), url('/assets/site-bg-desktop.png')`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}
             />
+
+            {/* Mobile Background */}
+            <div 
+              className="md:hidden fixed inset-0 pointer-events-none z-0 bg-cover bg-center bg-fixed opacity-45 filter contrast-105 transition-all duration-1000 animate-pulse-subtle"
+              style={{
+                backgroundImage: `url('/assets/site-bg-mobile.jpg'), url('/assets/site-bg-mobile.png')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center top',
+              }}
+            />
+
+            {/* Animated Ambient Bokeh & Soft Waves Light Glows */}
+            <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+              <div className="absolute -top-32 -left-32 w-96 h-96 bg-cyan-400/15 rounded-full blur-3xl animate-float-slow" />
+              <div className="absolute top-1/2 -right-32 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl animate-float-slow" style={{ animationDelay: '3s' }} />
+              <div className="absolute -bottom-32 left-1/3 w-96 h-96 bg-pluto-gold/10 rounded-full blur-3xl animate-pulse-subtle" />
+            </div>
 
             {/* Main Application Container */}
             <div className="relative z-10 flex flex-col min-h-screen">
