@@ -5,9 +5,9 @@ import { COMPANY_INFO } from '../data/companyData';
 
 export const TopContactBar: React.FC = () => {
   return (
-    <div className="bg-pluto-navy-deep text-slate-200 border-b border-pluto-navy-border/60 text-xs py-1.5 sm:py-2 px-4 sm:px-8 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto flex justify-end md:justify-between items-center gap-2">
-        {/* Left: Location (Hidden on mobile view per reference image 13) */}
+    <div className="bg-pluto-navy-deep text-slate-200 border-b border-pluto-navy-border/60 text-xs py-1.5 sm:py-2 px-3 sm:px-8 transition-colors duration-200">
+      <div className="max-w-7xl mx-auto flex justify-between items-center gap-2">
+        {/* Left on Desktop: Location */}
         <div className="hidden md:flex items-center gap-2 text-slate-300 hover:text-pluto-gold transition-colors">
           <MapPin className="w-3.5 h-3.5 text-pluto-gold shrink-0" />
           <span className="font-medium tracking-wide truncate max-w-md">
@@ -15,7 +15,27 @@ export const TopContactBar: React.FC = () => {
           </span>
         </div>
 
-        {/* Center: Phone & Email (Hidden on mobile view per reference image 13) */}
+        {/* Left on Mobile: Phone & Email (as marked in green in image copy 28.png) */}
+        <div className="flex md:hidden items-center gap-2.5">
+          <a
+            href={`tel:${COMPANY_INFO.phoneRaw}`}
+            className="flex items-center gap-1 text-[11px] font-bold text-slate-200 hover:text-pluto-gold transition-colors"
+          >
+            <Phone className="w-3 h-3 text-pluto-gold shrink-0" />
+            <span>(254) 221-0222</span>
+          </a>
+          <span className="text-slate-600">•</span>
+          <a
+            href={`mailto:${COMPANY_INFO.email}`}
+            className="flex items-center gap-1 text-[11px] text-slate-300 hover:text-pluto-gold transition-colors"
+            title={COMPANY_INFO.email}
+          >
+            <Mail className="w-3 h-3 text-pluto-gold shrink-0" />
+            <span className="hidden xs:inline">Email</span>
+          </a>
+        </div>
+
+        {/* Center on Desktop: Phone & Email */}
         <div className="hidden md:flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
           <a
             href={`tel:${COMPANY_INFO.phoneRaw}`}
@@ -34,8 +54,8 @@ export const TopContactBar: React.FC = () => {
           </a>
         </div>
 
-        {/* Right: Only Client Portal visible on mobile, with badge on desktop */}
-        <div className="flex items-center gap-3 w-full md:w-auto justify-end">
+        {/* Right: Client Portal & Security Badge */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <div className="hidden lg:flex items-center gap-1 text-[11px] text-emerald-400 font-medium">
             <Shield className="w-3 h-3 text-emerald-400" />
             <span>IRS Authorized e-file Provider</span>
@@ -43,9 +63,9 @@ export const TopContactBar: React.FC = () => {
           <span className="text-slate-600 hidden lg:inline">•</span>
           <Link
             to="/portal"
-            className="inline-flex items-center gap-1.5 bg-pluto-navy-light/90 hover:bg-pluto-gold hover:text-pluto-navy-deep text-pluto-gold px-3 py-1 rounded font-semibold transition-all border border-pluto-gold/30 shadow-sm"
+            className="inline-flex items-center gap-1.5 bg-pluto-navy-light/90 hover:bg-pluto-gold hover:text-pluto-navy-deep text-pluto-gold px-2.5 sm:px-3 py-1 rounded font-semibold text-[11px] sm:text-xs transition-all border border-pluto-gold/30 shadow-sm"
           >
-            <UserCheck className="w-3.5 h-3.5" />
+            <UserCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             <span>Client Portal</span>
           </Link>
         </div>

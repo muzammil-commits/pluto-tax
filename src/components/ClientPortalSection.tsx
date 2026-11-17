@@ -21,12 +21,42 @@ export const ClientPortalSection: React.FC = () => {
   const [isPortalModalOpen, setIsPortalModalOpen] = useState(false);
 
   const portalFeatures = [
-    { title: "Secure Client Login", desc: "256-bit SSL encrypted auth", icon: Lock },
-    { title: "Upload Tax Documents", desc: "Drag & drop W-2s, 1099s safely", icon: UploadCloud },
-    { title: "Review Filing Progress", desc: "Live stage-by-stage tracker", icon: Clock },
-    { title: "Access Documents", desc: "24/7 access to returns & receipts", icon: FileText },
-    { title: "Client Notifications", desc: "Real-time IRS approval alerts", icon: Bell },
-    { title: "Communicate with CPA", desc: "Direct messaging with CPA team", icon: MessageSquare },
+    { 
+      title: "Secure Client Login", 
+      desc: "Bank-grade 256-bit TLS encryption protecting your credentials and sensitive tax data.", 
+      icon: Lock,
+      badge: "256-Bit SSL"
+    },
+    { 
+      title: "Upload Tax Documents", 
+      desc: "Safely drag & drop W-2s, 1099s, and foreign account statements into your encrypted vault.", 
+      icon: UploadCloud,
+      badge: "Encrypted Vault"
+    },
+    { 
+      title: "Review Filing Progress", 
+      desc: "Live stage-by-stage milestone tracker from document intake to IRS e-file acceptance.", 
+      icon: Clock,
+      badge: "Real-Time Tracking"
+    },
+    { 
+      title: "Access Important Documents", 
+      desc: "24/7 on-demand download access to your finalized Form 1040, schedules, and IRS receipts.", 
+      icon: FileText,
+      badge: "24/7 Availability"
+    },
+    { 
+      title: "Client Notifications", 
+      desc: "Instant automated alerts for CPA status updates, signature requests, and refund approvals.", 
+      icon: Bell,
+      badge: "Instant Alerts"
+    },
+    { 
+      title: "Communicate with CPA", 
+      desc: "Direct confidential messaging line with your assigned senior tax advisory team.", 
+      icon: MessageSquare,
+      badge: "Direct CPA Access"
+    },
   ];
 
   return (
@@ -93,24 +123,28 @@ export const ClientPortalSection: React.FC = () => {
               Access your tax documents, review filing progress, communicate with our team and stay informed through your secure PlutoTax client portal.
             </p>
 
-            {/* Features Grid - Tightened Spacing */}
-            <div className="mt-5 grid grid-cols-2 gap-2.5 w-full">
+            {/* Features Grid - Grand Look with Luxury Card Styling & Zero Truncation */}
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 w-full">
               {portalFeatures.map((feat, idx) => {
                 const Icon = feat.icon;
                 return (
                   <div 
                     key={idx}
-                    className="flex items-start gap-2 p-2.5 rounded-xl bg-white/90 border border-slate-200/80 shadow-sm hover:border-pluto-gold/50 transition-all"
+                    className="group/card relative flex items-start gap-3 p-3.5 sm:p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-blue-200/90 shadow-[0_4px_16px_rgba(8,43,99,0.06)] hover:shadow-[0_8px_24px_rgba(8,43,99,0.12)] hover:border-pluto-gold/70 transition-all duration-300 hover:-translate-y-0.5"
                   >
-                    <div className="w-7 h-7 rounded-lg bg-pluto-blue-light flex items-center justify-center shrink-0 mt-0.5 text-pluto-navy">
-                      <Icon className="w-3.5 h-3.5 text-pluto-navy" />
+                    {/* Glowing Gradient Icon Container */}
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-pluto-navy to-pluto-navy-deep text-pluto-gold flex items-center justify-center shrink-0 shadow-md border border-pluto-gold/30 group-hover/card:scale-105 transition-transform mt-0.5">
+                      <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-pluto-gold" />
                     </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1">
-                        <span className="truncate">{feat.title}</span>
-                        <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
-                      </h4>
-                      <p className="text-[11px] text-slate-500 line-clamp-1 leading-snug">
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-1.5 mb-1">
+                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 font-heading leading-tight">
+                          {feat.title}
+                        </h4>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                      </div>
+                      <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed font-normal">
                         {feat.desc}
                       </p>
                     </div>
@@ -119,11 +153,11 @@ export const ClientPortalSection: React.FC = () => {
               })}
             </div>
 
-            {/* Action Buttons */}
-            <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
+            {/* Action Buttons with Grand Corporate Aesthetics */}
+            <div className="mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full">
               <Link
                 to="/portal"
-                className="inline-flex items-center justify-center gap-2 bg-pluto-navy hover:bg-pluto-navy-deep text-white px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-md transition-all"
+                className="inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-pluto-navy via-pluto-navy to-pluto-navy-deep hover:from-pluto-navy-deep hover:to-pluto-navy text-white px-7 py-3 rounded-xl font-extrabold text-xs sm:text-sm shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 border border-pluto-gold/40"
               >
                 <span>Access Client Portal</span>
                 <ArrowRight className="w-4 h-4 text-pluto-gold" />
@@ -132,10 +166,10 @@ export const ClientPortalSection: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsPortalModalOpen(true)}
-                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-pluto-navy border border-slate-300 px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm"
+                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-800 hover:text-pluto-navy border-2 border-blue-200 hover:border-pluto-navy/50 px-6 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm"
               >
-                <Eye className="w-3.5 h-3.5 text-slate-500" />
-                <span>Interactive Preview</span>
+                <Eye className="w-4 h-4 text-pluto-gold" />
+                <span>Interactive Live Preview</span>
               </button>
             </div>
           </motion.div>

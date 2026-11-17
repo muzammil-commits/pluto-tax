@@ -52,12 +52,12 @@ export const HeroSection: React.FC = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           
-          {/* Left Column: Headline, Description & CTAs with smart mobile backdrop */}
+          {/* Left Column: Headline, Description & CTAs (clean without mobile background box/shadow) */}
           <motion.div 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
-            className="lg:col-span-7 xl:col-span-7 flex flex-col items-start text-left max-w-xl bg-pluto-navy-deep/60 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none p-4 sm:p-0 rounded-2xl border border-white/10 sm:border-none shadow-lg sm:shadow-none"
+            className="lg:col-span-7 xl:col-span-7 flex flex-col items-start text-left max-w-xl"
           >
             
             {/* Small Top Label */}
