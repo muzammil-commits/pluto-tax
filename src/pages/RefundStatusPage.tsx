@@ -260,206 +260,138 @@ export const RefundStatusPage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          SECTION 4: STATE-BY-STATE REFUND LOOKUP
+          OFFICIAL TAX & REFUND RESOURCES (4 VERIFIED GOVERNMENT & STATE GATEWAYS)
           ========================================================================= */}
-      <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-8">
-          <h2 className="text-2xl font-extrabold text-slate-900 font-heading">
-            State Tax Agency Refund Tracker
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-600 mt-1">
-            State refunds are issued separately from federal refunds. Select your state to access the official department portal.
-          </p>
-        </div>
-
-        <div className="bg-white rounded-2xl p-6 border border-blue-200/80 shadow-sm max-w-3xl mx-auto">
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
-            {Object.keys(STATE_PORTALS).map((st) => (
-              <button
-                key={st}
-                onClick={() => setSelectedState(st)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                  selectedState === st
-                    ? 'bg-pluto-navy text-white shadow-xs'
-                    : 'bg-blue-50 text-slate-700 hover:bg-blue-100'
-                }`}
-              >
-                {st}
-              </button>
-            ))}
+      <section className="py-12 sm:py-16 bg-white/95 border-t border-blue-200/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 text-pluto-navy text-xs font-bold uppercase tracking-wider mb-2">
+              <ShieldCheck className="w-3.5 h-3.5 text-pluto-navy" />
+              <span>VERIFIED TAX & REFUND GATEWAYS</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading">
+              Official Federal & State Tax Portals
+            </h2>
+            <p className="mt-2 text-xs sm:text-sm text-slate-600">
+              Access the authorized IRS portals and state taxation departments directly to track your refund or submit secure payments.
+            </p>
           </div>
 
-          <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <span className="text-[10px] font-bold text-pluto-navy uppercase bg-white px-2 py-0.5 rounded border border-slate-200">
-                {selectedState} State Department
-              </span>
-              <h3 className="text-base font-bold text-slate-900 mt-1">
-                {STATE_PORTALS[selectedState]?.agency}
-              </h3>
-              <p className="text-xs text-slate-600 mt-0.5">
-                Expected Processing Time: {STATE_PORTALS[selectedState]?.time}
-              </p>
-            </div>
-
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {/* Link 1: IRS Where's My Refund */}
             <a
-              href={STATE_PORTALS[selectedState]?.url}
+              href="https://sa.www4.irs.gov/wmr/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 bg-pluto-navy hover:bg-pluto-navy-deep text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shrink-0"
+              className="group p-6 rounded-3xl bg-gradient-to-br from-white via-white to-blue-50/50 border-2 border-blue-200/80 hover:border-pluto-gold shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
             >
-              <span>Visit Official State Tracker</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          SECTION 5: COMMON DELAYS, PATH ACT & NOTICE EXPLANATION
-          ========================================================================= */}
-      <section className="py-12 bg-[#EAF3FF]/80 border-t border-blue-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-8">
-            <h2 className="text-2xl font-extrabold text-slate-900 font-heading">
-              Common Refund Delays & Explanations
-            </h2>
-            <p className="text-xs text-slate-600 mt-1">
-              Why some returns take longer than the standard 21-day window.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              {
-                title: "PATH Act Mandatory Holds",
-                desc: "By federal law, IRS cannot issue refunds claiming Earned Income Tax Credit (EITC) or Additional Child Tax Credit (ACTC) before mid-February, even if e-filed early."
-              },
-              {
-                title: "Identity Verification Notices (Letter 5071C / 4883C)",
-                desc: "If identity filters trigger, the IRS mails a letter asking you to verify your identity on id.me or by phone before processing resumes."
-              },
-              {
-                title: "Brokerage 1099-B Cost Basis Discrepancies",
-                desc: "Unreported cost basis on stock sales (e.g. RSUs or crypto) causes IRS matching algorithms to freeze refunds for manual verification."
-              },
-              {
-                title: "Prior-Year Unfiled Returns or Offsets",
-                desc: "If past years are open or federal student loans/child support offsets apply, the Bureau of the Fiscal Service may withhold all or part of your refund."
-              }
-            ].map((d, i) => (
-              <div key={i} className="p-4 rounded-xl bg-white border border-blue-200/80 shadow-xs">
-                <div className="flex items-center gap-2 mb-1">
-                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-                  <h4 className="text-sm font-bold text-slate-900">{d.title}</h4>
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-pluto-navy text-pluto-gold flex items-center justify-center shadow-md">
+                    <Search className="w-5 h-5 text-pluto-gold" />
+                  </div>
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-emerald-600" /> Official IRS Gateway
+                  </span>
                 </div>
-                <p className="text-xs text-slate-600 leading-relaxed">{d.desc}</p>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-pluto-navy transition-colors font-heading">
+                  1. IRS "Where's My Refund?" Portal
+                </h3>
+                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                  Direct official portal from the Internal Revenue Service to verify your e-file refund status, direct deposit date, or paper check dispatch.
+                </p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          SECTION 6: DIRECT DEPOSIT SCHEDULE & BANK PROCESSING
-          ========================================================================= */}
-      <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-3xl p-6 sm:p-10 border border-blue-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <div>
-            <span className="text-xs font-bold text-pluto-navy uppercase bg-blue-50 px-3 py-1 rounded-full">
-              PAYMENT METHODOLOGY
-            </span>
-            <h3 className="text-xl sm:text-2xl font-bold font-heading text-slate-900 mt-2">
-              Direct Deposit vs Physical Paper Checks
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-              Choosing direct deposit is the fastest, safest method. The IRS deposits 8 out of 10 refunds electronically. Paper checks can take an extra 3 to 6 weeks to arrive by mail.
-            </p>
-            <div className="mt-4 space-y-2 text-xs text-slate-600">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>Supports up to 3 separate accounts (Checking, Savings, IRA) via Form 8888</span>
+              <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-pluto-navy group-hover:text-amber-600">
+                <span className="truncate max-w-[280px]">sa.www4.irs.gov/wmr/</span>
+                <ExternalLink className="w-4 h-4 ml-2 shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>Zero risk of mail theft, postal misdelivery, or check reissue delays</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-pluto-navy-deep text-white">
-            <h4 className="text-sm font-bold text-pluto-gold uppercase">Deposit Timeline Guide</h4>
-            <div className="mt-3 space-y-2 text-xs">
-              <div className="flex justify-between py-1 border-b border-slate-700">
-                <span className="text-slate-300">E-File Accepted</span>
-                <span className="font-semibold text-white">Day 1 - 2</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-slate-700">
-                <span className="text-slate-300">IRS Algorithm Processing</span>
-                <span className="font-semibold text-white">Day 3 - 14</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-slate-700">
-                <span className="text-slate-300">Refund Approved & Sent</span>
-                <span className="font-semibold text-emerald-400">Day 14 - 21</span>
-              </div>
-              <div className="flex justify-between py-1">
-                <span className="text-slate-300">Bank ACH Post</span>
-                <span className="font-semibold text-pluto-gold">Within 1-5 Days</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          SECTION 7: PLUTOTAX ADVOCACY & TRANSCRIPT PULLS
-          ========================================================================= */}
-      <section className="py-12 bg-[#EAF3FF]/80 border-t border-blue-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-          <span className="text-xs font-bold text-pluto-navy uppercase bg-white px-3 py-1 rounded-full border border-blue-200">
-            NEED DEDICATED ASSISTANCE?
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading mt-2">
-            Is Your Refund Delayed Beyond 21 Days?
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-            As authorized CPA and Enrolled Agent representatives, PlutoTax can pull your official IRS Return and Account Transcripts directly through e-Services to identify freeze codes (such as TC 570 or TC 420) and contact the IRS Practitioner Priority Service on your behalf.
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <button
-              onClick={() => openConsultationModal('Delayed Refund Transcript Request')}
-              className="bg-pluto-gold hover:bg-pluto-gold-bright text-pluto-navy-deep px-6 py-3 rounded-xl font-bold text-xs sm:text-sm shadow-md transition-transform hover:scale-[1.02]"
-            >
-              Request CPA Transcript Review
-            </button>
-            <Link
-              to="/portal"
-              className="bg-pluto-navy hover:bg-pluto-navy-deep text-white px-6 py-3 rounded-xl font-bold text-xs sm:text-sm transition-colors"
-            >
-              Open Client Portal
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          SECTION 8: CONTACT SUPPORT CTA
-          ========================================================================= */}
-      <section className="py-12 bg-white border-t border-slate-200 text-center">
-        <div className="max-w-2xl mx-auto px-4">
-          <h3 className="text-lg font-bold text-slate-900 font-heading">
-            Questions Regarding Your Tax Return?
-          </h3>
-          <p className="text-xs text-slate-500 mt-1">
-            Our Austin, Texas client service desk is available Monday through Friday.
-          </p>
-          <div className="mt-4 flex items-center justify-center gap-4 text-xs font-bold text-pluto-navy">
-            <a href={`tel:${COMPANY_INFO.phoneRaw}`} className="hover:underline">
-              {COMPANY_INFO.phone}
             </a>
-            <span>•</span>
-            <a href={`mailto:${COMPANY_INFO.email}`} className="hover:underline">
-              {COMPANY_INFO.email}
+
+            {/* Link 2: IRS Pay by Debit or Credit Card */}
+            <a
+              href="https://www.irs.gov/payments/pay-your-taxes-by-debit-or-credit-card"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group p-6 rounded-3xl bg-gradient-to-br from-white via-white to-blue-50/50 border-2 border-blue-200/80 hover:border-pluto-gold shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-pluto-navy text-pluto-gold flex items-center justify-center shadow-md">
+                    <DollarSign className="w-5 h-5 text-pluto-gold" />
+                  </div>
+                  <span className="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-blue-600" /> Secure IRS Payments
+                  </span>
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-pluto-navy transition-colors font-heading">
+                  2. Pay Your Taxes by Debit or Credit Card
+                </h3>
+                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                  Make safe electronic tax payments directly to the US Treasury via authorized payment processors using Visa, MasterCard, Discover, or American Express.
+                </p>
+              </div>
+              <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-pluto-navy group-hover:text-amber-600">
+                <span className="truncate max-w-[280px]">irs.gov/payments</span>
+                <ExternalLink className="w-4 h-4 ml-2 shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </a>
+
+            {/* Link 3: Official Payments / ACI Payments Portal */}
+            <a
+              href="https://www.officialpayments.com/mobile/index.jsp?OWASP_CSRFTOKEN=BSPB-P3YA-70TI-IQ1A-7ZO6-YR1X-D0XU-YFPF"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group p-6 rounded-3xl bg-gradient-to-br from-white via-white to-blue-50/50 border-2 border-blue-200/80 hover:border-pluto-gold shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-pluto-navy text-pluto-gold flex items-center justify-center shadow-md">
+                    <FileCheck2 className="w-5 h-5 text-pluto-gold" />
+                  </div>
+                  <span className="text-[10px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-purple-600" /> ACI Official Payments
+                  </span>
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-pluto-navy transition-colors font-heading">
+                  3. Official Payments (ACI Payments) Portal
+                </h3>
+                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                  Official authorized payment provider for federal Form 1040 balance due, estimated quarterly taxes (Form 1040-ES), and state tax remittances.
+                </p>
+              </div>
+              <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-pluto-navy group-hover:text-amber-600">
+                <span className="truncate max-w-[280px]">officialpayments.com</span>
+                <ExternalLink className="w-4 h-4 ml-2 shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </a>
+
+            {/* Link 4: State Tax Information For All States */}
+            <a
+              href="https://support.taxslayerpro.com/hc/en-us/articles/360022323154-State-Tax-Information-For-All-States"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group p-6 rounded-3xl bg-gradient-to-br from-white via-white to-blue-50/50 border-2 border-blue-200/80 hover:border-pluto-gold shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-pluto-navy text-pluto-gold flex items-center justify-center shadow-md">
+                    <Building2 className="w-5 h-5 text-pluto-gold" />
+                  </div>
+                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-amber-600" /> All 50 States Lookup
+                  </span>
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-pluto-navy transition-colors font-heading">
+                  4. State Tax Information For All States
+                </h3>
+                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                  Comprehensive directory of all 50 US State Departments of Revenue, including state refund portals, filing addresses, customer service hotlines, and state extensions.
+                </p>
+              </div>
+              <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-pluto-navy group-hover:text-amber-600">
+                <span className="truncate max-w-[280px]">State Tax Information (All 50 States)</span>
+                <ExternalLink className="w-4 h-4 ml-2 shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
             </a>
           </div>
         </div>

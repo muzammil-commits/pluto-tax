@@ -64,6 +64,7 @@ export const ServiceDetailPage: React.FC = () => {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-slate-300 mb-4">
             <Breadcrumbs
+              variant="light"
               items={[
                 { name: 'Services', path: '/services' },
                 { name: service.title },

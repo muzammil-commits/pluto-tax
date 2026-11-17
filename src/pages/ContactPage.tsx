@@ -155,37 +155,6 @@ export const ContactPage: React.FC = () => {
         </div>
       </section>
 
-      {/* =========================================================================
-          SECTION 4: DEPARTMENTAL DIRECTORY
-          ========================================================================= */}
-      <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-8">
-          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 font-heading">
-            Direct Department Contacts
-          </h2>
-          <p className="text-xs text-slate-600 mt-1">
-            Connect directly with the specialized team handling your inquiry.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { dept: "Individual & Visa Desk", email: "support@plutotax.com", focus: "1040, 1040NR, F1/OPT, H1B, L1 returns" },
-            { dept: "CAA ITIN Unit", email: "itin@plutotax.com", focus: "In-person & video W-7 passport certifications" },
-            { dept: "Cross-Border & NRI", email: "international@plutotax.com", focus: "FBAR, FATCA, Indian DTAA & property sale" },
-            { dept: "Corporate & Small Biz", email: "business@plutotax.com", focus: "1120-S, 1065, Bookkeeping, State Franchise" }
-          ].map((item, idx) => (
-            <div key={idx} className="p-4 rounded-2xl bg-white border border-blue-200/80 shadow-xs">
-              <h4 className="text-sm font-bold text-pluto-navy">{item.dept}</h4>
-              <p className="text-xs text-slate-500 mt-0.5">{item.focus}</p>
-              <a href={`mailto:${item.email}`} className="text-xs text-amber-700 font-bold hover:underline block mt-2">
-                {item.email}
-              </a>
-            </div>
-          ))}
-        </div>
-      </section>
-
     </div>
   );
 };

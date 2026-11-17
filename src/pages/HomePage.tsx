@@ -19,14 +19,14 @@ export const HomePage: React.FC = () => {
       {/* 1. Hero Section (Desktop background: image copy 3.png bright animated; Mobile background: image copy 4.png bright animated) */}
       <HeroSection />
 
-      {/* 2. Statistics Strip (IMMEDIATELY BELOW HERO SECTION - As strictly required) */}
+      {/* 2. Statistics Strip (IMMEDIATELY BELOW HERO SECTION) */}
       <StatisticsStrip />
 
-      {/* 3. Dedicated Client Portal Section (Directly below statistics strip) */}
-      <ClientPortalSection />
-
-      {/* 4. Our Professional Services (9 Cards with unique images & dedicated pages) */}
+      {/* 3. Our Professional Services (Placed above Secure Client Portal per user request) */}
       <ServicesSection />
+
+      {/* 4. Dedicated Secure Client Portal Section */}
+      <ClientPortalSection />
 
       {/* 5. Why Choose PlutoTax? (Navy & Gold Core Values) */}
       <WhyChooseUs />
