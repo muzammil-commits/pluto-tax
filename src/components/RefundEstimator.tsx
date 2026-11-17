@@ -8,8 +8,12 @@ import {
   AlertTriangle, 
   ArrowRight, 
   Sparkles,
-  ShieldCheck
+  ShieldCheck,
+  Maximize2,
+  X,
+  FileSpreadsheet
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { calculateEstimatedTax, TaxCalculationInput, TaxCalculationResult } from '../utils/taxCalculator';
 import { useSite } from '../context/SiteContext';
 
@@ -25,13 +29,12 @@ export const RefundEstimator: React.FC = () => {
   });
 
   const [result, setResult] = useState<TaxCalculationResult | null>(null);
-  const [hasCalculated, setHasCalculated] = useState(false);
+  const [isBreakdownModalOpen, setIsBreakdownModalOpen] = useState(false);
 
   const handleCalculate = (e: React.FormEvent) => {
     e.preventDefault();
     const calculated = calculateEstimatedTax(formData);
     setResult(calculated);
-    setHasCalculated(true);
   };
 
   return (
@@ -43,8 +46,14 @@ export const RefundEstimator: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-14">
+        {/* Section Header with Scroll Animation */}
+        <motion.div 
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col items-center text-center max-w-3xl mx-auto mb-14"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-pluto-blue-light border border-pluto-navy/20 text-pluto-navy text-xs font-bold uppercase tracking-wider mb-4 shadow-sm">
             <Calculator className="w-3.5 h-3.5 text-pluto-navy" />
             <span>ESTIMATE YOUR TAX POSITION</span>
@@ -57,10 +66,16 @@ export const RefundEstimator: React.FC = () => {
           <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
             Get a preliminary estimate of your potential tax refund using official 2024/2025 federal tax brackets. Fast, secure, and zero SSN required.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Main 2-Column Calculator Container */}
-        <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+        {/* Main 2-Column Calculator Container with Scroll Animation */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7 }}
+          className="bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden grid grid-cols-1 lg:grid-cols-12"
+        >
           
           {/* Left Column: Form Controls */}
           <form onSubmit={handleCalculate} className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between">
@@ -244,7 +259,7 @@ export const RefundEstimator: React.FC = () => {
               </div>
 
               {result ? (
-                <div className="space-y-6">
+                <div className="space-y-6 animate-fade-in">
                   {/* Estimated Refund / Balance Due Box */}
                   <div className="bg-pluto-navy-surface/90 border border-pluto-gold/40 rounded-2xl p-6 text-center shadow-xl">
                     <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
@@ -289,6 +304,16 @@ export const RefundEstimator: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* Pop up full breakdown button */}
+                  <button
+                    type="button"
+                    onClick={() => setIsBreakdownModalOpen(true)}
+                    className="w-full flex items-center justify-center gap-1.5 text-xs text-pluto-gold hover:underline py-1"
+                  >
+                    <Maximize2 className="w-3.5 h-3.5" />
+                    <span>View In-Depth Tax Analysis Popup</span>
+                  </button>
+
                   {/* Disclaimer */}
                   <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-200/90 leading-relaxed flex items-start gap-2">
                     <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
@@ -327,9 +352,89 @@ export const RefundEstimator: React.FC = () => {
 
           </div>
 
-        </div>
+        </motion.div>
 
       </div>
+
+      {/* =========================================================================
+          DETAILED TAX BREAKDOWN POPUP MODAL
+          ========================================================================= */}
+      {isBreakdownModalOpen && result && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm animate-fade-in">
+          <div 
+            className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 animate-fade-up relative p-6 sm:p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
+              <div>
+                <span className="text-xs font-bold text-pluto-navy uppercase tracking-wider">
+                  Official 2024/2025 Parameters
+                </span>
+                <h3 className="text-2xl font-bold font-heading text-slate-900 mt-0.5">
+                  Detailed Tax Analysis Breakdown
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsBreakdownModalOpen(false)}
+                className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-sm">
+              <div className="grid grid-cols-2 gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                <div>
+                  <span className="text-xs text-slate-500">Gross Income:</span>
+                  <div className="text-lg font-bold text-slate-900">${result.calculationBreakdown.grossIncome.toLocaleString()}</div>
+                </div>
+                <div>
+                  <span className="text-xs text-slate-500">Standard Deduction:</span>
+                  <div className="text-lg font-bold text-emerald-600">-${result.standardDeduction.toLocaleString()}</div>
+                </div>
+                <div>
+                  <span className="text-xs text-slate-500">Net Taxable Income:</span>
+                  <div className="text-lg font-bold text-slate-900">${result.taxableIncome.toLocaleString()}</div>
+                </div>
+                <div>
+                  <span className="text-xs text-slate-500">Total Tax Withheld:</span>
+                  <div className="text-lg font-bold text-pluto-navy">${result.calculationBreakdown.withheld.toLocaleString()}</div>
+                </div>
+              </div>
+
+              <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-emerald-950">
+                <div className="font-bold text-sm mb-1">
+                  {result.isRefund ? 'Projected Overpayment / Refund' : 'Projected Balance Due'}
+                </div>
+                <div className="text-3xl font-black font-heading text-emerald-700">
+                  ${result.estimatedRefundOrDue.toLocaleString()}
+                </div>
+                <p className="text-xs text-emerald-800 mt-2">
+                  Our CPAs routinely discover an average of $2,400+ in overlooked deductions, multi-state tax allocations, and treaty credits.
+                </p>
+              </div>
+
+              <div className="pt-4 flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => {
+                    setIsBreakdownModalOpen(false);
+                    openConsultationModal('Estimator Breakdown Review');
+                  }}
+                  className="flex-1 bg-pluto-navy text-white font-bold py-3 rounded-xl text-xs sm:text-sm hover:bg-pluto-navy-deep transition-colors text-center"
+                >
+                  Claim Free CPA Return Audit
+                </button>
+                <button
+                  onClick={() => setIsBreakdownModalOpen(false)}
+                  className="px-5 py-3 border border-slate-300 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50"
+                >
+                  Close Window
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
     </section>
   );

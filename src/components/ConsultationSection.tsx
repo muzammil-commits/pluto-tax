@@ -10,6 +10,7 @@ import {
   ShieldCheck, 
   AlertCircle 
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { COMPANY_INFO } from '../data/companyData';
 import { useSite } from '../context/SiteContext';
 
@@ -31,7 +32,6 @@ export const ConsultationSection: React.FC = () => {
     e.preventDefault();
     setErrorMessage('');
 
-    // Form validation
     if (!fullName.trim() || !email.trim() || !phone.trim() || !message.trim()) {
       setErrorMessage('Please fill in all required fields.');
       return;
@@ -45,7 +45,6 @@ export const ConsultationSection: React.FC = () => {
 
     setIsLoading(true);
 
-    // Simulate backend submission delay
     setTimeout(() => {
       addEnquiry({
         fullName,
@@ -58,12 +57,11 @@ export const ConsultationSection: React.FC = () => {
 
       setIsLoading(false);
       setIsSubmitted(true);
-      // Reset form
       setFullName('');
       setEmail('');
       setPhone('');
       setMessage('');
-    }, 900);
+    }, 850);
   };
 
   return (
@@ -72,8 +70,14 @@ export const ConsultationSection: React.FC = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           
-          {/* Left Column: Contact Details & Value Props */}
-          <div className="lg:col-span-5 flex flex-col justify-between">
+          {/* Left Column: Contact Details with Scroll Animation */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.7 }}
+            className="lg:col-span-5 flex flex-col justify-between"
+          >
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-pluto-blue-light text-pluto-navy text-xs font-bold uppercase tracking-wider mb-4">
                 <ShieldCheck className="w-3.5 h-3.5" />
@@ -165,10 +169,16 @@ export const ConsultationSection: React.FC = () => {
               <Clock className="w-4 h-4 text-emerald-600" />
               <span>Free 15-Minute Intake • Zero Sales Pressure • 100% Confidential</span>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Right Column: Working Consultation Form */}
-          <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 border-2 border-slate-200 shadow-xl relative">
+          {/* Right Column: Working Consultation Form with Scroll Animation */}
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.7 }}
+            className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 border-2 border-slate-200 shadow-xl relative"
+          >
             
             <h3 className="text-xl sm:text-2xl font-bold text-slate-900 font-heading mb-2">
               Request Your Free Tax Consultation
@@ -334,7 +344,7 @@ export const ConsultationSection: React.FC = () => {
               </form>
             )}
 
-          </div>
+          </motion.div>
 
         </div>
 

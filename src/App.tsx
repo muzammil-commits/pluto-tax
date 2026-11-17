@@ -6,6 +6,7 @@ import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { ConsultationModal } from './components/ConsultationModal';
 import { BackToTop } from './components/BackToTop';
+import { FloatingActions } from './components/FloatingActions';
 
 // Pages
 import { HomePage } from './pages/HomePage';
@@ -54,6 +55,7 @@ export function App() {
             {/* Global Interactive Modals & Floating Utilities */}
             <ConsultationModal />
             <BackToTop />
+            <FloatingActions />
           </div>
         </BrowserRouter>
       </AuthProvider>

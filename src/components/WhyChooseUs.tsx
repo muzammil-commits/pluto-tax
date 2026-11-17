@@ -11,6 +11,7 @@ import {
   Sparkles,
   ArrowRight
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useSite } from '../context/SiteContext';
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -43,8 +44,14 @@ export const WhyChooseUs: React.FC = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
+        {/* Section Header with Scroll Animation */}
+        <motion.div 
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-pluto-gold/40 text-pluto-gold text-xs font-bold uppercase tracking-wider mb-4 shadow-sm backdrop-blur-md">
             <Sparkles className="w-3.5 h-3.5 text-pluto-gold fill-pluto-gold" />
             <span>UNCOMPROMISING STANDARDS</span>
@@ -57,15 +64,19 @@ export const WhyChooseUs: React.FC = () => {
           <p className="mt-4 text-base sm:text-lg text-slate-300 leading-relaxed font-normal">
             Your goals are our priority. We are committed to providing trusted, personalized and reliable tax solutions.
           </p>
-        </div>
+        </motion.div>
 
-        {/* 7 Core Values Grid */}
+        {/* 7 Core Values Grid with Staggered Scroll Animation */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {CORE_VALUES.map((val, idx) => {
             const Icon = ICON_MAP[val.icon] || ShieldCheck;
             return (
-              <div
+              <motion.div
                 key={idx}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-30px" }}
+                transition={{ delay: idx * 0.08, duration: 0.5, ease: "easeOut" }}
                 className="group relative bg-pluto-navy-surface/70 hover:bg-pluto-navy-surface backdrop-blur-md rounded-2xl p-6 border border-slate-700/60 hover:border-pluto-gold/80 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 flex flex-col justify-between"
               >
                 <div>
@@ -90,12 +101,18 @@ export const WhyChooseUs: React.FC = () => {
                   <span>Guaranteed Standard</span>
                   <span>0{idx + 1}</span>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
 
-          {/* 8th CTA Card */}
-          <div className="group relative bg-gradient-to-br from-pluto-gold via-pluto-gold-bright to-amber-500 rounded-2xl p-6 text-pluto-navy-deep shadow-2xl flex flex-col justify-between transform hover:-translate-y-1.5 transition-all">
+          {/* 8th CTA Card with Scroll Animation */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="group relative bg-gradient-to-br from-pluto-gold via-pluto-gold-bright to-amber-500 rounded-2xl p-6 text-pluto-navy-deep shadow-2xl flex flex-col justify-between transform hover:-translate-y-1.5 transition-all"
+          >
             <div>
               <div className="w-12 h-12 rounded-xl bg-pluto-navy-deep text-pluto-gold flex items-center justify-center mb-4">
                 <Award className="w-6 h-6" />
@@ -115,7 +132,7 @@ export const WhyChooseUs: React.FC = () => {
               <span>Schedule Consultation</span>
               <ArrowRight className="w-4 h-4 text-pluto-gold" />
             </button>
-          </div>
+          </motion.div>
 
         </div>
 

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Star, ChevronLeft, ChevronRight, Quote, ShieldCheck, CheckCircle } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight, Quote, ShieldCheck, CheckCircle, PlusCircle, X, Send } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useSite } from '../context/SiteContext';
 
 export const TestimonialsSection: React.FC = () => {
   const { testimonials } = useSite();
-  // Filter only approved testimonials
   const approvedTestimonials = testimonials.filter((t) => t.isApproved);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [newReviewSubmitted, setNewReviewSubmitted] = useState(false);
 
   // Auto slide every 5 seconds if not paused
   useEffect(() => {
@@ -27,6 +29,15 @@ export const TestimonialsSection: React.FC = () => {
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % approvedTestimonials.length);
+  };
+
+  const handleReviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setNewReviewSubmitted(true);
+    setTimeout(() => {
+      setNewReviewSubmitted(false);
+      setIsReviewModalOpen(false);
+    }, 2500);
   };
 
   if (approvedTestimonials.length === 0) {
@@ -56,8 +67,14 @@ export const TestimonialsSection: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-14">
+        {/* Section Header with Scroll Animation */}
+        <motion.div 
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col items-center text-center max-w-3xl mx-auto mb-14"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold uppercase tracking-wider mb-4 shadow-sm">
             <ShieldCheck className="w-3.5 h-3.5 text-pluto-gold fill-pluto-gold" />
             <span>VERIFIED CLIENT REVIEWS</span>
@@ -70,10 +87,24 @@ export const TestimonialsSection: React.FC = () => {
           <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
             Real feedback from high-earning professionals, founders, and NRI families who trust PlutoTax with their most critical tax filings.
           </p>
-        </div>
 
-        {/* Carousel Card */}
-        <div className="max-w-4xl mx-auto relative">
+          <button
+            onClick={() => setIsReviewModalOpen(true)}
+            className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-pluto-navy hover:text-pluto-gold transition-colors bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm"
+          >
+            <PlusCircle className="w-3.5 h-3.5" />
+            <span>Submit a Verified Client Review</span>
+          </button>
+        </motion.div>
+
+        {/* Carousel Card with Scroll Animation */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="max-w-4xl mx-auto relative"
+        >
           
           <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-8 sm:p-12 relative overflow-hidden transition-all duration-500">
             
@@ -170,9 +201,101 @@ export const TestimonialsSection: React.FC = () => {
             </button>
           </div>
 
-        </div>
+        </motion.div>
 
       </div>
+
+      {/* =========================================================================
+          SUBMIT CLIENT REVIEW POPUP MODAL
+          ========================================================================= */}
+      {isReviewModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm animate-fade-in">
+          <div 
+            className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 animate-fade-up relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setIsReviewModalOpen(false)}
+              className="absolute top-5 right-5 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <h3 className="text-xl font-bold font-heading text-slate-900 mb-1">
+              Submit a Verified Review
+            </h3>
+            <p className="text-xs text-slate-500 mb-6">
+              Share your tax filing experience with PlutoTax. Reviews are verified before publication.
+            </p>
+
+            {newReviewSubmitted ? (
+              <div className="p-6 bg-emerald-50 rounded-2xl border border-emerald-200 text-center animate-fade-in">
+                <CheckCircle className="w-10 h-10 text-emerald-600 mx-auto mb-2" />
+                <h4 className="font-bold text-emerald-950">Review Received!</h4>
+                <p className="text-xs text-emerald-800 mt-1">
+                  Thank you! Your feedback has been forwarded to our compliance team for approval.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleReviewSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    Your Full Name
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Vikram Malhotra"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:ring-2 focus:ring-pluto-navy"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    Role & City
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Senior Product Manager (Austin, TX)"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:ring-2 focus:ring-pluto-navy"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    Service Received
+                  </label>
+                  <select className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs">
+                    <option>Advance Tax Planning</option>
+                    <option>Federal & Multi-State Tax</option>
+                    <option>Indian Cross-Border Tax (NRI)</option>
+                    <option>FBAR & FATCA Compliance</option>
+                    <option>ITIN Processing (CAA)</option>
+                    <option>Business Tax & Bookkeeping</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    Your Review
+                  </label>
+                  <textarea
+                    rows={3}
+                    required
+                    placeholder="Describe how PlutoTax assisted with your tax returns and savings..."
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:ring-2 focus:ring-pluto-navy"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-pluto-navy text-white font-bold py-3 rounded-xl text-xs hover:bg-pluto-navy-deep transition-colors flex items-center justify-center gap-2"
+                >
+                  <Send className="w-4 h-4 text-pluto-gold" />
+                  <span>Submit for Verification</span>
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
 
     </section>
   );
