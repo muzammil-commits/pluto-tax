@@ -25,7 +25,8 @@ import {
   FileSpreadsheet,
   Check,
   ExternalLink,
-  Info
+  Info,
+  CreditCard
 } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { 
@@ -67,6 +68,9 @@ interface YearDataset {
   invoices: {
     id: string;
     number: string;
+    orderId: string;
+    orderType: string;
+    taxReturn: string;
     description: string;
     amount: number;
     date: string;
@@ -118,9 +122,23 @@ const YEAR_DATA_MAP: Record<TaxYearType, YearDataset> = {
       {
         id: 'inv-24-1',
         number: 'PT-2024-7841',
+        orderId: 'RTFOID1',
+        orderType: 'Tax Organizer Filing',
+        taxReturn: 'Tax Organizer (2024)',
         description: 'US Federal Form 1040 Preparation + FBAR / DTAA Advisory',
-        amount: 350.00,
+        amount: 205.00,
         date: '04/10/2024',
+        status: 'PAID'
+      },
+      {
+        id: 'inv-24-2',
+        number: 'PT-2024-8119',
+        orderId: 'RTFOID2',
+        orderType: 'Federal Tax Return',
+        taxReturn: 'Form 1040 Final Return (2024)',
+        description: 'Federal Form 1040 E-File + Schedule B & Form 8938',
+        amount: 350.00,
+        date: '04/14/2024',
         status: 'PAID'
       }
     ]
@@ -167,10 +185,24 @@ const YEAR_DATA_MAP: Record<TaxYearType, YearDataset> = {
       {
         id: 'inv-25-1',
         number: 'PT-2025-8842',
+        orderId: 'RTFOID1',
+        orderType: 'Tax Organizer Filing',
+        taxReturn: 'Tax Organizer (2025)',
         description: 'US Federal Form 1040 Preparation + FBAR / DTAA Advisory',
-        amount: 350.00,
+        amount: 205.00,
         date: '03/15/2025',
         status: 'PAID'
+      },
+      {
+        id: 'inv-25-2',
+        number: 'PT-2025-9031',
+        orderId: 'RTFOID2',
+        orderType: 'Form 1040 Preparation',
+        taxReturn: 'Tax Return (2025)',
+        description: 'Draft Return Review, Deduction Optimization & E-File Signoff',
+        amount: 350.00,
+        date: '03/20/2025',
+        status: 'PENDING'
       }
     ]
   },
@@ -203,8 +235,11 @@ const YEAR_DATA_MAP: Record<TaxYearType, YearDataset> = {
       {
         id: 'inv-26-1',
         number: 'PT-2026-9210',
-        description: 'Tax Year 2026 Professional Filing Retainer',
-        amount: 350.00,
+        orderId: 'RTFOID1',
+        orderType: 'Tax Retainer',
+        taxReturn: 'Tax Organizer (2026)',
+        description: 'Tax Year 2026 Professional Filing Retainer & Intake Review',
+        amount: 205.00,
         date: '02/01/2026',
         status: 'PENDING'
       }
@@ -239,6 +274,10 @@ export const PortalPage: React.FC = () => {
   const [activeDashboardTab, setActiveDashboardTab] = useState<DashboardTabType>('Overview');
   const [downloadFeedback, setDownloadFeedback] = useState<string>('');
   const [previewModalDoc, setPreviewModalDoc] = useState<any | null>(null);
+
+  // Invoice Filter & Payment States (matching image copy 32.png)
+  const [invoiceFilter, setInvoiceFilter] = useState<'All' | 'Completed' | 'Unpaid'>('All');
+  const [payingInvoiceId, setPayingInvoiceId] = useState<string | null>(null);
 
   // Upload modal / states
   const [isUploading, setIsUploading] = useState(false);
@@ -341,6 +380,16 @@ export const PortalPage: React.FC = () => {
     generateInvoicePDF(inv.number, selectedTaxYear, clientName, clientEmail, inv.amount, inv.status);
     setDownloadFeedback(`Invoice ${inv.number} downloaded successfully!`);
     setTimeout(() => setDownloadFeedback(''), 5000);
+  };
+
+  const handlePayNow = (inv: any) => {
+    setPayingInvoiceId(inv.id);
+    setTimeout(() => {
+      inv.status = 'PAID';
+      setPayingInvoiceId(null);
+      setDownloadFeedback(`Payment of $${inv.amount.toFixed(2)} for ${inv.taxReturn} received! Order #${inv.orderId} marked as Completed.`);
+      setTimeout(() => setDownloadFeedback(''), 5000);
+    }, 850);
   };
 
   // Current year data
@@ -840,74 +889,6 @@ export const PortalPage: React.FC = () => {
             {activeDashboardTab === 'Overview' && (
               <div className="space-y-6">
                 
-                {/* 4 Financial & Status Snapshot Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  
-                  {/* Card 1: Federal Return */}
-                  <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
-                    <div>
-                      <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                        Federal Tax ({selectedTaxYear})
-                      </div>
-                      <div className="text-lg font-black text-slate-900 font-heading">
-                        {currentYearData.federalRefund}
-                      </div>
-                    </div>
-                    <div className="mt-3 pt-2 border-t border-slate-100 text-xs text-emerald-600 font-semibold flex items-center gap-1">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>{currentYearData.federalStatus}</span>
-                    </div>
-                  </div>
-
-                  {/* Card 2: State Return */}
-                  <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
-                    <div>
-                      <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                        State Filing ({selectedTaxYear})
-                      </div>
-                      <div className="text-lg font-black text-slate-900 font-heading">
-                        {currentYearData.stateStatus}
-                      </div>
-                    </div>
-                    <div className="mt-3 pt-2 border-t border-slate-100 text-xs text-slate-500 font-semibold flex items-center gap-1">
-                      <span>{currentYearData.stateRefund}</span>
-                    </div>
-                  </div>
-
-                  {/* Card 3: Vault Documents */}
-                  <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
-                    <div>
-                      <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                        Document Vault
-                      </div>
-                      <div className="text-lg font-black text-slate-900 font-heading">
-                        {currentYearData.documents.length} Files Uploaded
-                      </div>
-                    </div>
-                    <div className="mt-3 pt-2 border-t border-slate-100 text-xs text-pluto-navy font-semibold flex items-center gap-1">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                      <span>256-Bit Encrypted</span>
-                    </div>
-                  </div>
-
-                  {/* Card 4: Dedicated CPA */}
-                  <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
-                    <div>
-                      <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                        Assigned Advisor
-                      </div>
-                      <div className="text-lg font-black text-slate-900 font-heading">
-                        Michael Miller, CPA
-                      </div>
-                    </div>
-                    <div className="mt-3 pt-2 border-t border-slate-100 text-xs text-slate-500 flex items-center justify-between">
-                      <span>Austin Corporate HQ</span>
-                      <span className="text-emerald-600 font-bold">Online</span>
-                    </div>
-                  </div>
-
-                </div>
-
                 {/* 2 Columns: Documents Vault Summary & CPA Messaging */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                   
@@ -930,56 +911,62 @@ export const PortalPage: React.FC = () => {
                       {currentYearData.documents.map((doc) => (
                         <div 
                           key={doc.id}
-                          className="group relative p-3 sm:p-4 rounded-2xl border border-slate-200/90 hover:border-pluto-gold/80 bg-slate-50/60 hover:bg-white transition-all duration-300 shadow-xs hover:shadow-md flex flex-col gap-2.5"
+                          className="group relative p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 hover:border-pluto-gold/80 bg-slate-50/70 hover:bg-white transition-all duration-300 shadow-xs hover:shadow-md flex flex-col gap-3"
                         >
-                          {/* Top Row: Icon, File Name & Status Badge */}
-                          <div className="flex items-start justify-between gap-2.5">
-                            <div className="flex items-start gap-2.5 min-w-0 flex-1">
-                              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-pluto-blue-light to-blue-100 text-pluto-navy flex items-center justify-center shrink-0 border border-blue-200/70 shadow-xs group-hover:scale-105 transition-transform">
-                                <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-pluto-navy" />
+                          {/* File info and badge with flexible wrapping so badge never clips */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pluto-blue-light to-blue-100 text-pluto-navy flex items-center justify-center shrink-0 border border-blue-200/80 shadow-xs group-hover:scale-105 transition-transform">
+                                <FileText className="w-5 h-5 text-pluto-navy" />
                               </div>
                               <div className="min-w-0 flex-1">
-                                <div className="text-xs sm:text-sm font-extrabold text-slate-900 break-words leading-snug group-hover:text-pluto-navy transition-colors">
+                                <div className="text-xs sm:text-sm font-extrabold text-slate-900 truncate group-hover:text-pluto-navy transition-colors" title={doc.name}>
                                   {doc.name}
                                 </div>
-                                
-                                {/* Metadata Tags */}
-                                <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] sm:text-[11px] text-slate-500 font-medium">
-                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-pluto-navy/5 text-pluto-navy font-bold border border-pluto-navy/10">
+                                <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-pluto-navy/5 text-pluto-navy font-bold border border-pluto-navy/10">
                                     {doc.category}
                                   </span>
                                   <span>•</span>
                                   <span>{doc.size}</span>
+                                  {doc.uploadDate && (
+                                    <>
+                                      <span>•</span>
+                                      <span className="text-slate-400">Uploaded {doc.uploadDate}</span>
+                                    </>
+                                  )}
                                 </div>
                               </div>
                             </div>
 
-                            {/* Status Badge: Always fully visible, never clips or overflows */}
-                            <span className="shrink-0 inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-xs">
-                              <CheckCircle2 className="w-3 h-3 text-emerald-600 stroke-[2.5]" />
-                              <span>{doc.status}</span>
-                            </span>
+                            {/* Verified Badge - robust container that never clips */}
+                            <div className="self-start sm:self-center shrink-0 pl-1">
+                              <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-xs">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" />
+                                <span>{doc.status}</span>
+                              </span>
+                            </div>
                           </div>
 
                           {/* Action Footer: View & Download Buttons */}
-                          <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
-                            <div className="flex items-center gap-1 text-[10px] text-slate-400">
-                              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                          <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 text-xs">
+                            <div className="flex items-center gap-1 text-[11px] text-slate-500 font-medium">
+                              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                               <span>AES-256 Vault</span>
                             </div>
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-2">
                               <button
                                 onClick={() => setPreviewModalDoc(doc)}
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-600 hover:text-pluto-navy hover:bg-slate-100 border border-slate-200 transition-colors"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 hover:text-pluto-navy hover:bg-slate-100 border border-slate-200 transition-colors shadow-xs"
                               >
-                                <Eye className="w-3 h-3 text-pluto-navy" />
+                                <Eye className="w-3.5 h-3.5 text-pluto-navy" />
                                 <span>View</span>
                               </button>
                               <button
                                 onClick={handleDownloadTaxOrganizer}
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold text-pluto-navy hover:text-white bg-blue-50/80 hover:bg-pluto-navy border border-blue-200 shadow-xs transition-all"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-pluto-navy hover:text-white bg-blue-50/90 hover:bg-pluto-navy border border-blue-200 shadow-xs transition-all"
                               >
-                                <Download className="w-3 h-3" />
+                                <Download className="w-3.5 h-3.5" />
                                 <span>Download</span>
                               </button>
                             </div>
@@ -1140,58 +1127,62 @@ export const PortalPage: React.FC = () => {
                     {currentYearData.documents.map((doc) => (
                       <div 
                         key={doc.id}
-                        className="group relative p-3 sm:p-4 rounded-2xl border border-slate-200/90 hover:border-pluto-gold/80 bg-slate-50/60 hover:bg-white transition-all duration-300 shadow-xs hover:shadow-md flex flex-col gap-2.5"
+                        className="group relative p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 hover:border-pluto-gold/80 bg-slate-50/70 hover:bg-white transition-all duration-300 shadow-xs hover:shadow-md flex flex-col gap-3"
                       >
-                        {/* Top Row: Icon, File Name & Status Badge */}
-                        <div className="flex items-start justify-between gap-2.5">
-                          <div className="flex items-start gap-2.5 min-w-0 flex-1">
-                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-pluto-blue-light to-blue-100 text-pluto-navy flex items-center justify-center shrink-0 border border-blue-200/70 shadow-xs group-hover:scale-105 transition-transform">
-                              <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-pluto-navy" />
+                        {/* File info and badge with flexible wrapping so badge never clips */}
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                          <div className="flex items-center gap-3 min-w-0 flex-1">
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pluto-blue-light to-blue-100 text-pluto-navy flex items-center justify-center shrink-0 border border-blue-200/80 shadow-xs group-hover:scale-105 transition-transform">
+                              <FileText className="w-5 h-5 text-pluto-navy" />
                             </div>
                             <div className="min-w-0 flex-1">
-                              <div className="text-xs sm:text-sm font-extrabold text-slate-900 break-words leading-snug group-hover:text-pluto-navy transition-colors">
+                              <div className="text-xs sm:text-sm font-extrabold text-slate-900 truncate group-hover:text-pluto-navy transition-colors" title={doc.name}>
                                 {doc.name}
                               </div>
-                              
-                              {/* Metadata Tags */}
-                              <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] sm:text-[11px] text-slate-500 font-medium">
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-pluto-navy/5 text-pluto-navy font-bold border border-pluto-navy/10">
+                              <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-pluto-navy/5 text-pluto-navy font-bold border border-pluto-navy/10">
                                   {doc.category}
                                 </span>
                                 <span>•</span>
                                 <span>{doc.size}</span>
-                                <span>•</span>
-                                <span>Uploaded {doc.uploadDate}</span>
+                                {doc.uploadDate && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="text-slate-400">Uploaded {doc.uploadDate}</span>
+                                  </>
+                                )}
                               </div>
                             </div>
                           </div>
 
-                          {/* Status Badge: Always fully visible, never clips or overflows */}
-                          <span className="shrink-0 inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-xs">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600 stroke-[2.5]" />
-                            <span>{doc.status}</span>
-                          </span>
+                          {/* Verified Badge - robust container that never clips */}
+                          <div className="self-start sm:self-center shrink-0 pl-1">
+                            <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-xs">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" />
+                              <span>{doc.status}</span>
+                            </span>
+                          </div>
                         </div>
 
                         {/* Action Footer: View & Download Buttons */}
-                        <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
-                          <div className="flex items-center gap-1 text-[10px] text-slate-400">
-                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                        <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 text-xs">
+                          <div className="flex items-center gap-1 text-[11px] text-slate-500 font-medium">
+                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                             <span>AES-256 Vault</span>
                           </div>
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-2">
                             <button
                               onClick={() => setPreviewModalDoc(doc)}
-                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-600 hover:text-pluto-navy hover:bg-slate-100 border border-slate-200 transition-colors"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 hover:text-pluto-navy hover:bg-slate-100 border border-slate-200 transition-colors shadow-xs"
                             >
-                              <Eye className="w-3 h-3 text-pluto-navy" />
+                              <Eye className="w-3.5 h-3.5 text-pluto-navy" />
                               <span>View</span>
                             </button>
                             <button
                               onClick={handleDownloadTaxOrganizer}
-                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold text-pluto-navy hover:text-white bg-blue-50/80 hover:bg-pluto-navy border border-blue-200 shadow-xs transition-all"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-pluto-navy hover:text-white bg-blue-50/90 hover:bg-pluto-navy border border-blue-200 shadow-xs transition-all"
                             >
-                              <Download className="w-3 h-3" />
+                              <Download className="w-3.5 h-3.5" />
                               <span>Download</span>
                             </button>
                           </div>
@@ -1230,19 +1221,19 @@ export const PortalPage: React.FC = () => {
                   {currentYearData.documents.map((doc) => (
                     <div 
                       key={doc.id}
-                      className="group relative p-3.5 rounded-2xl border border-slate-200/90 hover:border-pluto-gold/80 bg-slate-50/60 hover:bg-white transition-all duration-300 shadow-xs flex flex-col gap-2.5"
+                      className="group relative p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 hover:border-pluto-gold/80 bg-slate-50/70 hover:bg-white transition-all duration-300 shadow-xs hover:shadow-md flex flex-col gap-3"
                     >
-                      <div className="flex items-start justify-between gap-2.5">
-                        <div className="flex items-start gap-2.5 min-w-0 flex-1">
-                          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-pluto-blue-light to-blue-100 text-pluto-navy flex items-center justify-center shrink-0 border border-blue-200/70 shadow-xs">
-                            <FileText className="w-4 h-4 text-pluto-navy" />
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pluto-blue-light to-blue-100 text-pluto-navy flex items-center justify-center shrink-0 border border-blue-200/80 shadow-xs">
+                            <FileText className="w-5 h-5 text-pluto-navy" />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <div className="text-xs font-extrabold text-slate-900 break-words leading-snug">
+                            <div className="text-xs sm:text-sm font-extrabold text-slate-900 truncate" title={doc.name}>
                               {doc.name}
                             </div>
-                            <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] text-slate-500 font-medium">
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-pluto-navy/5 text-pluto-navy font-bold border border-pluto-navy/10">
+                            <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-pluto-navy/5 text-pluto-navy font-bold border border-pluto-navy/10">
                                 {doc.category}
                               </span>
                               <span>•</span>
@@ -1253,30 +1244,32 @@ export const PortalPage: React.FC = () => {
                           </div>
                         </div>
 
-                        <span className="shrink-0 inline-flex items-center gap-1 text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-xs">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-600 stroke-[2.5]" />
-                          <span>{doc.status}</span>
-                        </span>
+                        <div className="self-start sm:self-center shrink-0 pl-1">
+                          <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-xs">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" />
+                            <span>{doc.status}</span>
+                          </span>
+                        </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
-                        <div className="flex items-center gap-1 text-[10px] text-slate-400">
+                      <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 text-xs">
+                        <div className="flex items-center gap-1 text-[11px] text-slate-500 font-medium">
                           <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
                           <span>AES-256 Vault</span>
                         </div>
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-2">
                           <button
                             onClick={() => setPreviewModalDoc(doc)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-600 hover:text-pluto-navy hover:bg-slate-100 border border-slate-200 transition-colors"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 hover:text-pluto-navy hover:bg-slate-100 border border-slate-200 transition-colors shadow-xs"
                           >
-                            <Eye className="w-3 h-3 text-pluto-navy" />
+                            <Eye className="w-3.5 h-3.5 text-pluto-navy" />
                             <span>View</span>
                           </button>
                           <button
                             onClick={handleDownloadTaxOrganizer}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold text-pluto-navy hover:text-white bg-blue-50/80 hover:bg-pluto-navy border border-blue-200 shadow-xs transition-all"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-pluto-navy hover:text-white bg-blue-50/90 hover:bg-pluto-navy border border-blue-200 shadow-xs transition-all"
                           >
-                            <Download className="w-3 h-3" />
+                            <Download className="w-3.5 h-3.5" />
                             <span>Download</span>
                           </button>
                         </div>
@@ -1402,58 +1395,238 @@ export const PortalPage: React.FC = () => {
               </div>
             )}
 
-            {/* TAB 5: INVOICES */}
-            {activeDashboardTab === 'Invoices' && (
-              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 font-heading">
-                    Tax Advisory Invoices & Billing ({selectedTaxYear})
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Transparent, fixed billing receipts for professional tax preparation and foreign asset advisory.
-                  </p>
-                </div>
+            {/* TAB 5: INVOICES (EXACT REFERENCE: image copy 32.png) */}
+            {activeDashboardTab === 'Invoices' && (() => {
+              const allCount = currentYearData.invoices.length;
+              const completedCount = currentYearData.invoices.filter((i) => i.status === 'PAID').length;
+              const unpaidCount = currentYearData.invoices.filter((i) => i.status !== 'PAID').length;
+              const filteredInvoices = currentYearData.invoices.filter((inv) => {
+                if (invoiceFilter === 'Completed') return inv.status === 'PAID';
+                if (invoiceFilter === 'Unpaid') return inv.status !== 'PAID';
+                return true;
+              });
 
-                <div className="space-y-4">
-                  {currentYearData.invoices.map((inv) => (
-                    <div 
-                      key={inv.id}
-                      className="p-5 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-                    >
-                      <div className="flex items-start gap-3.5">
-                        <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
-                          <Receipt className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h4 className="text-sm font-bold text-slate-900">
-                              Invoice #{inv.number}
-                            </h4>
-                            <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
-                              inv.status === 'PAID' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-                            }`}>
-                              {inv.status}
-                            </span>
-                          </div>
-                          <p className="text-xs text-slate-600 mt-0.5">{inv.description}</p>
-                          <div className="text-[11px] text-slate-400 mt-1">
-                            Date: {inv.date} • Amount: <strong>${inv.amount.toFixed(2)} USD</strong>
-                          </div>
-                        </div>
-                      </div>
+              return (
+                <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+                  
+                  {/* Top Bar: Title & Status Buttons (image copy 32.png) */}
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                    <div>
+                      <h3 className="text-xl font-black text-slate-900 font-heading">
+                        Tax Invoice Management ({selectedTaxYear})
+                      </h3>
+                      <p className="text-xs text-slate-500 mt-1">
+                        Secure e-invoicing for professional Form 1040 preparation, DTAA analysis & FBAR disclosures.
+                      </p>
+                    </div>
 
+                    {/* Status Filter Buttons (image copy 32.png) */}
+                    <div className="flex flex-wrap items-center gap-2">
                       <button
-                        onClick={() => handleDownloadInvoice(inv)}
-                        className="inline-flex items-center justify-center gap-1.5 bg-white border border-slate-300 hover:border-pluto-navy text-slate-800 hover:text-pluto-navy px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm shrink-0"
+                        onClick={() => setInvoiceFilter('All')}
+                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${
+                          invoiceFilter === 'All'
+                            ? 'bg-pluto-navy text-white shadow-md'
+                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                        }`}
                       >
-                        <Download className="w-3.5 h-3.5 text-pluto-navy" />
-                        <span>Download Invoice PDF</span>
+                        All Invoices ({allCount})
+                      </button>
+                      <button
+                        onClick={() => setInvoiceFilter('Completed')}
+                        className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-black transition-all ${
+                          invoiceFilter === 'Completed'
+                            ? 'bg-emerald-600 text-white shadow-md'
+                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                        }`}
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span>Completed ({completedCount})</span>
+                      </button>
+                      <button
+                        onClick={() => setInvoiceFilter('Unpaid')}
+                        className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-black transition-all ${
+                          invoiceFilter === 'Unpaid'
+                            ? 'bg-amber-500 text-white shadow-md'
+                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                        }`}
+                      >
+                        <AlertCircle className="w-3.5 h-3.5" />
+                        <span>Unpaid ({unpaidCount})</span>
                       </button>
                     </div>
-                  ))}
+                  </div>
+
+                  {/* Desktop Table View (Exact columns matching image copy 32.png) */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead>
+                        <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider bg-slate-50/50">
+                          <th className="py-3.5 px-4 rounded-l-xl">Tax Return</th>
+                          <th className="py-3.5 px-4">Order Id</th>
+                          <th className="py-3.5 px-4">Order Type</th>
+                          <th className="py-3.5 px-4">Invoice Amount</th>
+                          <th className="py-3.5 px-4 text-center">Invoice</th>
+                          <th className="py-3.5 px-4 text-right rounded-r-xl">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {filteredInvoices.length === 0 ? (
+                          <tr>
+                            <td colSpan={6} className="py-8 text-center text-slate-400 font-semibold">
+                              No {invoiceFilter.toLowerCase()} invoices found for Tax Year {selectedTaxYear}.
+                            </td>
+                          </tr>
+                        ) : (
+                          filteredInvoices.map((inv) => {
+                            const isPaid = inv.status === 'PAID';
+                            const isPaying = payingInvoiceId === inv.id;
+
+                            return (
+                              <tr key={inv.id} className="hover:bg-blue-50/30 transition-colors">
+                                {/* 1. Tax Return */}
+                                <td className="py-4 px-4 font-bold text-slate-900">
+                                  <div className="flex items-center gap-2">
+                                    <Receipt className="w-4 h-4 text-pluto-navy shrink-0" />
+                                    <span>{inv.taxReturn}</span>
+                                  </div>
+                                  <span className="text-[10px] text-slate-400 font-normal pl-6">
+                                    Invoice #{inv.number} • {inv.date}
+                                  </span>
+                                </td>
+
+                                {/* 2. Order Id */}
+                                <td className="py-4 px-4 font-bold">
+                                  <span className="font-mono text-xs bg-slate-100 px-2.5 py-1 rounded-md text-slate-700 border border-slate-200">
+                                    {inv.orderId}
+                                  </span>
+                                </td>
+
+                                {/* 3. Order Type */}
+                                <td className="py-4 px-4 text-slate-700 font-semibold">
+                                  {inv.orderType}
+                                </td>
+
+                                {/* 4. Invoice Amount */}
+                                <td className="py-4 px-4 font-black text-slate-900 text-sm">
+                                  ${inv.amount.toFixed(2)}
+                                </td>
+
+                                {/* 5. Invoice (Download button) */}
+                                <td className="py-4 px-4 text-center">
+                                  <button
+                                    onClick={() => handleDownloadInvoice(inv)}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-pluto-navy hover:text-white text-slate-700 text-xs font-bold transition-all border border-slate-200 shadow-xs"
+                                    title="Download PDF Invoice"
+                                  >
+                                    <Download className="w-3.5 h-3.5" />
+                                    <span>Download</span>
+                                  </button>
+                                </td>
+
+                                {/* 6. Status (Completed or Unpaid + Pay Now) */}
+                                <td className="py-4 px-4 text-right">
+                                  {isPaid ? (
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black">
+                                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                                      <span>Completed</span>
+                                    </span>
+                                  ) : (
+                                    <div className="inline-flex items-center gap-2 justify-end">
+                                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-black">
+                                        Unpaid
+                                      </span>
+                                      <button
+                                        onClick={() => handlePayNow(inv)}
+                                        disabled={isPaying}
+                                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black shadow-sm transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
+                                      >
+                                        <CreditCard className="w-3.5 h-3.5" />
+                                        <span>{isPaying ? 'Processing...' : 'Pay Now'}</span>
+                                      </button>
+                                    </div>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Mobile View: High-Density Invoice Cards */}
+                  <div className="block md:hidden space-y-3.5">
+                    {filteredInvoices.length === 0 ? (
+                      <div className="py-8 text-center text-slate-400 font-semibold bg-slate-50 rounded-2xl">
+                        No {invoiceFilter.toLowerCase()} invoices found for Tax Year {selectedTaxYear}.
+                      </div>
+                    ) : (
+                      filteredInvoices.map((inv) => {
+                        const isPaid = inv.status === 'PAID';
+                        const isPaying = payingInvoiceId === inv.id;
+
+                        return (
+                          <div 
+                            key={inv.id}
+                            className="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col gap-3 shadow-xs"
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <div>
+                                <span className="font-mono text-[11px] font-bold bg-blue-50 text-pluto-navy px-2 py-0.5 rounded border border-blue-200">
+                                  {inv.orderId}
+                                </span>
+                                <h4 className="text-sm font-black text-slate-900 mt-1">
+                                  {inv.taxReturn}
+                                </h4>
+                                <p className="text-xs text-slate-500 font-medium">
+                                  {inv.orderType} • #{inv.number}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-base font-black text-slate-900 font-heading">
+                                  ${inv.amount.toFixed(2)}
+                                </div>
+                                <div className="text-[10px] text-slate-400">
+                                  {inv.date}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center justify-between pt-2.5 border-t border-slate-200 text-xs">
+                              <button
+                                onClick={() => handleDownloadInvoice(inv)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 font-bold border border-slate-300 shadow-xs"
+                              >
+                                <Download className="w-3.5 h-3.5 text-pluto-navy" />
+                                <span>Invoice PDF</span>
+                              </button>
+
+                              {isPaid ? (
+                                <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 font-black">
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                                  <span>Completed</span>
+                                </span>
+                              ) : (
+                                <button
+                                  onClick={() => handlePayNow(inv)}
+                                  disabled={isPaying}
+                                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black shadow-sm transition-all"
+                                >
+                                  <CreditCard className="w-3.5 h-3.5" />
+                                  <span>{isPaying ? 'Processing...' : 'Pay Now'}</span>
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+
                 </div>
-              </div>
-            )}
+              );
+            })()}
 
             {/* Document Preview Modal */}
             {previewModalDoc && (

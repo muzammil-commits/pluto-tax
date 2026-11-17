@@ -69,7 +69,7 @@ const CountingTypewriter: React.FC<{ target: string; isTriggered: boolean }> = (
     <span className="relative inline-flex items-center">
       <span>{displayValue}</span>
       {isTyping && (
-        <span className="ml-1 inline-block w-1 h-8 sm:h-10 bg-pluto-gold animate-pulse" />
+        <span className="ml-1 inline-block w-1 h-8 sm:h-10 bg-pluto-navy animate-pulse" />
       )}
     </span>
   );
@@ -99,19 +99,18 @@ export const StatisticsStrip: React.FC = () => {
 
   return (
     <section 
-      className="relative w-full bg-pluto-navy-deep text-white border-y border-pluto-gold/30 overflow-hidden py-8 sm:py-10"
+      className="relative w-full bg-gradient-to-r from-[#EAF3FF] via-[#DBEAFE] to-[#EAF3FF] text-slate-900 border-y border-blue-200/90 overflow-hidden py-8 sm:py-10 shadow-sm"
     >
-      {/* Subtle Dotted Pattern & Ambient Glow (No ghosted background images) */}
+      {/* Subtle Dotted Pattern & Ambient Soft Glow */}
       <div 
-        className="absolute inset-0 opacity-15 pointer-events-none"
+        className="absolute inset-0 opacity-20 pointer-events-none"
         style={{
-          backgroundImage: 'radial-gradient(rgba(255, 191, 0, 0.3) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(rgba(8, 43, 99, 0.2) 1px, transparent 1px)',
           backgroundSize: '24px 24px',
         }}
       />
 
-      {/* Subtle Golden Glow Accent */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 h-16 bg-pluto-gold/15 blur-2xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 h-16 bg-blue-400/10 blur-2xl pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
@@ -122,9 +121,9 @@ export const StatisticsStrip: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4 }}
-            className="mb-4 flex items-center justify-center gap-2 text-[11px] text-amber-300/90 bg-amber-500/10 border border-amber-500/20 py-1 px-3.5 rounded-full max-w-fit mx-auto"
+            className="mb-4 flex items-center justify-center gap-2 text-[11px] text-slate-700 bg-white/90 border border-blue-200 py-1 px-3.5 rounded-full max-w-fit mx-auto shadow-xs"
           >
-            <Info className="w-3 h-3 text-amber-400 shrink-0" />
+            <Info className="w-3.5 h-3.5 text-pluto-navy shrink-0" />
             <span>Reference performance metrics — Editable via Admin Console</span>
           </motion.div>
         )}
@@ -133,7 +132,7 @@ export const StatisticsStrip: React.FC = () => {
         <motion.div 
           onViewportEnter={() => setIsVisible(true)}
           viewport={{ once: true, margin: "-40px" }}
-          className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-700/60 items-center"
+          className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-blue-200/80 items-center"
         >
           {stats.map((stat, idx) => (
             <motion.div
@@ -145,17 +144,17 @@ export const StatisticsStrip: React.FC = () => {
               className="flex flex-col items-center text-center px-4 py-4 group"
             >
               {/* Typewriter Counter Number */}
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-pluto-gold tracking-tight drop-shadow font-heading">
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-pluto-navy tracking-tight drop-shadow-sm font-heading">
                 <CountingTypewriter target={stat.value} isTriggered={isVisible} />
               </div>
 
-              {/* Elegant White Label */}
-              <div className="mt-1.5 text-base sm:text-lg font-bold text-white tracking-wide">
+              {/* Elegant Navy Label */}
+              <div className="mt-1.5 text-base sm:text-lg font-extrabold text-slate-900 tracking-wide">
                 {stat.label}
               </div>
 
               {/* Supporting Subtext */}
-              <div className="mt-0.5 text-xs text-slate-300 max-w-xs font-normal">
+              <div className="mt-0.5 text-xs text-slate-600 max-w-xs font-medium">
                 {stat.detail}
               </div>
             </motion.div>
@@ -163,8 +162,8 @@ export const StatisticsStrip: React.FC = () => {
         </motion.div>
 
         {/* Security / Compliance Footnote */}
-        <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-center gap-2 text-[11px] text-slate-400">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+        <div className="mt-4 pt-3 border-t border-blue-200/80 flex items-center justify-center gap-2 text-[11px] text-slate-500">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
           <span>Strict adherence to IRS Circular 230 Standards & Gramm-Leach-Bliley Act (GLBA)</span>
         </div>
 

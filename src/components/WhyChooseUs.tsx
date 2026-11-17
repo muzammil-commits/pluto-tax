@@ -59,19 +59,19 @@ export const WhyChooseUs: React.FC = () => {
   const { openConsultationModal } = useSite();
 
   return (
-    <section className="relative w-full py-12 sm:py-16 bg-pluto-navy-deep text-white overflow-hidden border-t border-pluto-gold/20">
+    <section className="relative w-full py-12 sm:py-16 bg-[#EAF3FF]/85 backdrop-blur-sm text-slate-900 overflow-hidden border-t border-blue-200/70">
       
       {/* Background Graphic Elements */}
       <div 
-        className="absolute inset-0 opacity-10 pointer-events-none"
+        className="absolute inset-0 opacity-15 pointer-events-none"
         style={{
-          backgroundImage: 'radial-gradient(#FFBF00 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(rgba(8, 43, 99, 0.2) 1px, transparent 1px)',
           backgroundSize: '24px 24px',
         }}
       />
       
-      <div className="absolute top-1/3 left-0 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-0 w-80 h-80 bg-pluto-gold/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/3 left-0 w-72 h-72 bg-blue-300/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-0 w-80 h-80 bg-amber-200/20 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
@@ -83,16 +83,16 @@ export const WhyChooseUs: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10 sm:mb-12"
         >
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 border border-pluto-gold/40 text-pluto-gold text-xs font-bold uppercase tracking-wider mb-2.5 shadow-sm backdrop-blur-md">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/90 border border-pluto-gold/60 text-pluto-navy text-xs font-bold uppercase tracking-wider mb-2.5 shadow-xs backdrop-blur-md">
             <Sparkles className="w-3.5 h-3.5 text-pluto-gold fill-pluto-gold" />
             <span>UNCOMPROMISING STANDARDS & CORE VALUES</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight font-heading">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight font-heading">
             Our Core Values & Why Choose PlutoTax
           </h2>
 
-          <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+          <p className="mt-2 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
             Every client engagement is built upon strict accuracy, uncompromising ethical standards, and personalized CPA advisory.
           </p>
         </motion.div>
@@ -110,17 +110,17 @@ export const WhyChooseUs: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-20px" }}
                 transition={{ delay: idx * 0.05, duration: 0.45 }}
-                className="group relative bg-pluto-navy-surface/80 hover:bg-pluto-navy-surface backdrop-blur-md rounded-2xl overflow-hidden border border-slate-700/60 hover:border-pluto-gold/80 transition-all duration-300 shadow-lg hover:shadow-2xl hover:-translate-y-1 flex flex-col justify-between"
+                className="group relative bg-white/95 hover:bg-white backdrop-blur-md rounded-2xl overflow-hidden border border-blue-200/80 hover:border-pluto-gold/90 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between"
               >
                 {/* Related Photo Representation Header */}
                 <div className="relative h-32 w-full overflow-hidden bg-slate-800">
                   <img
                     src={imgData.image}
                     alt={val.title}
-                    className="w-full h-full object-cover object-center filter brightness-[0.9] group-hover:scale-105 group-hover:brightness-100 transition-all duration-500"
+                    className="w-full h-full object-cover object-center filter brightness-[0.95] group-hover:scale-105 group-hover:brightness-100 transition-all duration-500"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-pluto-navy-deep via-pluto-navy-deep/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-pluto-navy-deep/80 via-pluto-navy-deep/20 to-transparent" />
                   
                   {/* Floating Tag */}
                   <span className="absolute top-2.5 right-2.5 bg-pluto-navy-deep/90 border border-pluto-gold/50 text-pluto-gold text-[10px] font-extrabold px-2.5 py-0.5 rounded-full shadow-sm backdrop-blur-sm">
@@ -128,8 +128,8 @@ export const WhyChooseUs: React.FC = () => {
                   </span>
 
                   {/* Icon Badge overlapping photo */}
-                  <div className="absolute -bottom-3 left-4 w-9 h-9 rounded-xl bg-pluto-navy-deep group-hover:bg-pluto-gold/20 border border-pluto-gold/50 flex items-center justify-center text-pluto-gold shadow-md transition-colors">
-                    <Icon className="w-4 h-4 text-pluto-gold" />
+                  <div className="absolute -bottom-3 left-4 w-9 h-9 rounded-xl bg-white group-hover:bg-pluto-blue-light border border-blue-200 flex items-center justify-center text-pluto-navy shadow-md transition-colors">
+                    <Icon className="w-4 h-4 text-pluto-navy" />
                   </div>
                 </div>
 
@@ -137,20 +137,20 @@ export const WhyChooseUs: React.FC = () => {
                 <div className="p-4 sm:p-5 pt-5 flex-1 flex flex-col justify-between">
                   <div>
                     {/* Title */}
-                    <h3 className="text-base font-bold text-white group-hover:text-pluto-gold transition-colors font-heading leading-snug">
+                    <h3 className="text-base font-bold text-slate-900 group-hover:text-pluto-navy transition-colors font-heading leading-snug">
                       {val.title}
                     </h3>
 
                     {/* Description */}
-                    <p className="mt-1.5 text-xs text-slate-300 leading-relaxed font-normal">
+                    <p className="mt-1.5 text-xs text-slate-600 leading-relaxed font-normal">
                       {val.description}
                     </p>
                   </div>
 
                   {/* Subtle bottom indicator */}
-                  <div className="mt-4 pt-2.5 border-t border-slate-700/40 flex items-center justify-between text-[10px] text-slate-400 font-semibold group-hover:text-pluto-gold transition-colors">
+                  <div className="mt-4 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500 font-semibold group-hover:text-pluto-navy transition-colors">
                     <span>Standard #{idx + 1}</span>
-                    <span className="text-emerald-400">Verified Protocol</span>
+                    <span className="text-emerald-600 font-bold">Verified Protocol</span>
                   </div>
                 </div>
               </motion.div>
@@ -163,7 +163,7 @@ export const WhyChooseUs: React.FC = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.35, duration: 0.45 }}
-            className="group relative bg-gradient-to-br from-pluto-gold via-pluto-gold-bright to-amber-500 rounded-2xl p-5 text-pluto-navy-deep shadow-xl flex flex-col justify-between transform hover:-translate-y-1 transition-all overflow-hidden"
+            className="group relative bg-gradient-to-br from-pluto-gold via-pluto-gold-bright to-amber-500 rounded-2xl p-5 text-pluto-navy-deep shadow-lg flex flex-col justify-between transform hover:-translate-y-1 transition-all overflow-hidden"
           >
             <div>
               <div className="w-10 h-10 rounded-xl bg-pluto-navy-deep text-pluto-gold flex items-center justify-center mb-3 shadow-md">
