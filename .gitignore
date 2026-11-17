@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Raw reference screenshots in root
+image*.png
+image copy*.png
+

@@ -27,35 +27,53 @@ export function App() {
     <SiteProvider>
       <AuthProvider>
         <BrowserRouter>
-          <div className="flex flex-col min-h-screen bg-white text-slate-800">
-            {/* Top Contact Bar & Sticky Navbar */}
-            <Header />
+          <div className="relative min-h-screen text-slate-800 selection:bg-pluto-gold selection:text-pluto-navy-deep overflow-x-hidden">
+            
+            {/* =========================================================================
+                GLOBAL WHOLE-WEBSITE BACKGROUND: image copy 5.png
+                Set across the entire website on both desktop and mobile view
+                ========================================================================= */}
+            <div 
+              className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center md:bg-fixed opacity-30 filter contrast-105"
+              style={{
+                backgroundImage: `url('/assets/site-bg.jpg'), url('/assets/site-bg.png')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            />
 
-            {/* Main Page Routing */}
-            <main className="flex-1">
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/services" element={<ServicesPage />} />
-                <Route path="/services/:slug" element={<ServiceDetailPage />} />
-                <Route path="/refund-status" element={<RefundStatusPage />} />
-                <Route path="/contact" element={<ContactPage />} />
-                <Route path="/portal" element={<PortalPage />} />
-                <Route path="/admin" element={<AdminPage />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-                <Route path="/terms-and-conditions" element={<TermsPage />} />
-                <Route path="/security" element={<SecurityPage />} />
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </main>
+            {/* Main Application Container */}
+            <div className="relative z-10 flex flex-col min-h-screen">
+              {/* Top Contact Bar & Sticky Navbar */}
+              <Header />
 
-            {/* Global Deep Navy Footer */}
-            <Footer />
+              {/* Main Page Routing */}
+              <main className="flex-1">
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/services" element={<ServicesPage />} />
+                  <Route path="/services/:slug" element={<ServiceDetailPage />} />
+                  <Route path="/refund-status" element={<RefundStatusPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/portal" element={<PortalPage />} />
+                  <Route path="/admin" element={<AdminPage />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                  <Route path="/terms-and-conditions" element={<TermsPage />} />
+                  <Route path="/security" element={<SecurityPage />} />
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+              </main>
 
-            {/* Global Interactive Modals & Floating Utilities */}
-            <ConsultationModal />
-            <BackToTop />
-            <FloatingActions />
+              {/* Global Deep Navy Footer */}
+              <Footer />
+
+              {/* Global Interactive Modals & Floating Utilities */}
+              <ConsultationModal />
+              <BackToTop />
+              <FloatingActions />
+            </div>
+
           </div>
         </BrowserRouter>
       </AuthProvider>

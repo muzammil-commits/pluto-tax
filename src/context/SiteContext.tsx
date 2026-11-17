@@ -33,7 +33,19 @@ const STORAGE_KEYS = {
 export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [services, setServices] = useState<ServiceItem[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.SERVICES);
-    return saved ? JSON.parse(saved) : SERVICES_DATA;
+    if (saved) {
+      try {
+        const parsed: ServiceItem[] = JSON.parse(saved);
+        // Ensure fresh official image paths always take precedence
+        return SERVICES_DATA.map((s) => {
+          const found = parsed.find((p) => p.id === s.id);
+          return found ? { ...found, heroImage: s.heroImage } : s;
+        });
+      } catch (e) {
+        return SERVICES_DATA;
+      }
+    }
+    return SERVICES_DATA;
   });
 
   const [testimonials, setTestimonials] = useState<Testimonial[]>(() => {
