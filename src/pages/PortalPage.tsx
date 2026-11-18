@@ -247,6 +247,127 @@ const YEAR_DATA_MAP: Record<TaxYearType, YearDataset> = {
   }
 };
 
+// Reference exact types matching image copy 39, 40, 41
+interface DraftReturnRow {
+  id: string;
+  userId: string;
+  documentType: string;
+  comment: string;
+  date: string;
+  status: 'Completed' | 'Unpaid';
+  year: string;
+}
+
+interface PortalInvoiceRow {
+  id: string;
+  orderId: string;
+  orderType: string;
+  amount: number;
+  status: 'Completed' | 'Unpaid';
+  number: string;
+  year: string;
+}
+
+interface PortalMyDocRow {
+  id: number;
+  year: string;
+  type: string;
+  message: string;
+  uploadDate: string;
+  status: 'Completed' | 'Under Payment' | 'Docs Received';
+  fileName: string;
+}
+
+const INITIAL_DRAFT_RETURNS: DraftReturnRow[] = [
+  {
+    id: 'dtr-1',
+    userId: 'RTFOID1',
+    documentType: 'Tax Returns (2024)',
+    comment: 'Draft Coamountpy',
+    date: '06-03-2025',
+    status: 'Completed',
+    year: '2024'
+  },
+  {
+    id: 'dtr-2',
+    userId: 'RTFOID1',
+    documentType: 'Tax Returns (2024)',
+    comment: '11',
+    date: '06-03-2025',
+    status: 'Completed',
+    year: '2024'
+  },
+  {
+    id: 'dtr-3',
+    userId: 'RTFOID1',
+    documentType: 'Tax Returns (2024)',
+    comment: '12',
+    date: '06-03-2025',
+    status: 'Completed',
+    year: '2024'
+  },
+  {
+    id: 'dtr-4',
+    userId: 'RTFOID2',
+    documentType: 'Tax Returns (2025)',
+    comment: 'Draft Copy',
+    date: '29-01-2026',
+    status: 'Unpaid',
+    year: '2025'
+  }
+];
+
+const INITIAL_PORTAL_INVOICES: PortalInvoiceRow[] = [
+  {
+    id: 'pi-1',
+    orderId: 'RTFOID1',
+    orderType: 'Tax Organizer (2024)',
+    amount: 205,
+    status: 'Completed',
+    number: 'PT-2024-7841',
+    year: '2024'
+  },
+  {
+    id: 'pi-2',
+    orderId: 'RTFOID2',
+    orderType: 'Tax Organizer (2025)',
+    amount: 1,
+    status: 'Unpaid',
+    number: 'PT-2025-9031',
+    year: '2025'
+  }
+];
+
+const INITIAL_MY_DOCUMENTS: PortalMyDocRow[] = [
+  {
+    id: 1,
+    year: '2024',
+    type: 'Tax Organizer',
+    message: 'tax org',
+    uploadDate: '06-03-2025',
+    status: 'Completed',
+    fileName: '2024_Tax_Organizer.pdf'
+  },
+  {
+    id: 2,
+    year: '2025',
+    type: 'Tax Organizer',
+    message: 'asda',
+    uploadDate: '29-01-2026',
+    status: 'Under Payment',
+    fileName: '2025_Tax_Organizer_Draft.pdf'
+  },
+  {
+    id: 3,
+    year: '2025',
+    type: 'Form W2',
+    message: 'pler',
+    uploadDate: '04-06-2026',
+    status: 'Docs Received',
+    fileName: '2025_Form_W2.pdf'
+  }
+];
+
 export const PortalPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const initialTab = searchParams.get('tab') === 'register' ? 'register' : 'login';
@@ -390,6 +511,66 @@ export const PortalPage: React.FC = () => {
       setDownloadFeedback(`Payment of $${inv.amount.toFixed(2)} for ${inv.taxReturn} received! Order #${inv.orderId} marked as Completed.`);
       setTimeout(() => setDownloadFeedback(''), 5000);
     }, 850);
+  };
+
+  // Reference data state matching image copy 39, 40, 41
+  const [draftReturns, setDraftReturns] = useState<DraftReturnRow[]>(INITIAL_DRAFT_RETURNS);
+  const [portalInvoices, setPortalInvoices] = useState<PortalInvoiceRow[]>(INITIAL_PORTAL_INVOICES);
+  const [myDocsList, setMyDocsList] = useState<PortalMyDocRow[]>(INITIAL_MY_DOCUMENTS);
+
+  // Pay Now handler for portal invoices (image copy 40)
+  const handlePortalPayNow = (inv: PortalInvoiceRow) => {
+    setPayingInvoiceId(inv.id);
+    setTimeout(() => {
+      setPortalInvoices((prev) =>
+        prev.map((item) => (item.id === inv.id ? { ...item, status: 'Completed' } : item))
+      );
+      setDraftReturns((prev) =>
+        prev.map((item) => (item.userId === inv.orderId ? { ...item, status: 'Completed' } : item))
+      );
+      setPayingInvoiceId(null);
+      setDownloadFeedback(`Payment of $${inv.amount} for ${inv.orderType} received! Order #${inv.orderId} marked as Completed.`);
+      setTimeout(() => setDownloadFeedback(''), 5000);
+    }, 850);
+  };
+
+  // Download Draft Return PDF (image copy 39)
+  const handleDownloadDraftReturn = (item: DraftReturnRow) => {
+    const clientName = currentUser?.name || 'Srikanth Srikanth';
+    const clientEmail = currentUser?.email || 'srikanth@example.com';
+    generateTaxReturnSummaryPDF({
+      title: item.documentType,
+      year: item.year,
+      clientName,
+      clientEmail,
+      category: 'Draft Tax Return Document',
+      filingStatus: 'Single / Individual',
+      w2Wages: 168450,
+      totalIncome: 164200,
+      refundAmount: 2450,
+      efileConfirmation: `${item.userId}-CERT-${item.year}`,
+      cpaName: 'Michael Miller, CPA'
+    });
+    setDownloadFeedback(`Draft Tax Return (${item.documentType} - ${item.comment}) downloaded successfully!`);
+    setTimeout(() => setDownloadFeedback(''), 5000);
+  };
+
+  // Download Portal Invoice PDF (image copy 40)
+  const handleDownloadPortalInvoice = (inv: PortalInvoiceRow) => {
+    const clientName = currentUser?.name || 'Srikanth Srikanth';
+    const clientEmail = currentUser?.email || 'srikanth@example.com';
+    generateInvoicePDF(inv.number, inv.year, clientName, clientEmail, inv.amount, inv.status === 'Completed' ? 'PAID' : 'PENDING');
+    setDownloadFeedback(`Invoice for Order #${inv.orderId} ($${inv.amount}) downloaded successfully!`);
+    setTimeout(() => setDownloadFeedback(''), 5000);
+  };
+
+  // Download My Doc (image copy 41)
+  const handleDownloadMyDocItem = (doc: PortalMyDocRow) => {
+    const clientName = currentUser?.name || 'Srikanth Srikanth';
+    const clientEmail = currentUser?.email || 'srikanth@example.com';
+    generateTaxOrganizerPDF(doc.year as any, clientName, clientEmail);
+    setDownloadFeedback(`Document #${doc.id} (${doc.type} - ${doc.year}) downloaded successfully!`);
+    setTimeout(() => setDownloadFeedback(''), 5000);
   };
 
   // Current year data
@@ -717,168 +898,54 @@ export const PortalPage: React.FC = () => {
               </div>
             )}
 
-            {/* Top Bar Greeting: Welcome Srikanth Srikanth ( Reg Date : 06-03-2025 ) */}
-            <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-2xl bg-pluto-navy text-pluto-gold flex items-center justify-center font-black text-base shadow-sm shrink-0">
-                  {currentUser.name.charAt(0)}
-                </div>
-                <div>
-                  <h2 className="text-base sm:text-lg font-extrabold text-slate-900 font-heading">
-                    Welcome {currentUser.name} <span className="text-slate-500 font-normal text-xs sm:text-sm">( Reg Date : 06-03-2025 )</span>
-                  </h2>
-                  <div className="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
-                    <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
-                    <span>Account Active</span>
-                    <span>•</span>
-                    <span>Assigned CPA: <strong>Michael Miller, CPA</strong></span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={logoutClient}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700 text-slate-600 text-xs font-bold transition-colors"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Logout</span>
-                </button>
-              </div>
+            {/* Top Bar Greeting (Exact Match: image copy 39, 40, 41) */}
+            <div className="text-center pt-2 pb-5">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#082B63] font-heading inline-flex items-center justify-center flex-wrap gap-2">
+                <span>Welcome {currentUser.name}</span>
+                <span className="text-slate-800 font-normal text-base sm:text-lg inline-flex items-center gap-1.5">
+                  (
+                  <button 
+                    onClick={logoutClient} 
+                    title="Sign Out" 
+                    className="text-slate-800 hover:text-rose-600 transition-colors inline-flex items-center p-0.5 rounded cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4 inline" />
+                  </button>
+                  Reg Date : 06-03-2025
+                  )
+                </span>
+              </h2>
             </div>
 
-            {/* Navigation Tabs (matching image copy 31.png: Overview, Upload Docs, My Docs, Tax Returns, Invoices) */}
-            <div className="bg-white rounded-2xl p-2 border border-slate-200 shadow-sm flex flex-wrap gap-2">
-              {(['Overview', 'Upload Docs', 'My Docs', 'Tax Returns', 'Invoices'] as DashboardTabType[]).map((tab) => {
-                const isActive = activeDashboardTab === tab;
+            {/* Centered Navigation Pills (Exact Match: image copy 39, 40, 41) */}
+            <div className="flex items-center justify-center flex-wrap gap-2.5 sm:gap-3 mb-8">
+              {[
+                { id: 'Overview', label: 'Overview', count: null },
+                { id: 'Upload Docs', label: 'Upload Docs', count: null },
+                { id: 'My Docs', label: 'My Docs', count: null },
+                { id: 'Tax Returns', label: 'Tax Returns', count: draftReturns.length },
+                { id: 'Invoices', label: 'Invoices', count: portalInvoices.length },
+              ].map((item) => {
+                const isActive = activeDashboardTab === item.id;
                 return (
                   <button
-                    key={tab}
-                    onClick={() => setActiveDashboardTab(tab)}
-                    className={`flex-1 min-w-[120px] py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all text-center ${
+                    key={item.id}
+                    onClick={() => setActiveDashboardTab(item.id as DashboardTabType)}
+                    className={`inline-flex items-center justify-center px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all shadow-sm ${
                       isActive
-                        ? 'bg-pluto-navy text-white shadow-md'
-                        : 'text-slate-600 hover:text-pluto-navy hover:bg-slate-50'
+                        ? 'bg-[#E2E8F0] text-slate-900 ring-1 ring-slate-300'
+                        : 'bg-[#1D4ED8] hover:bg-[#1E40AF] text-white hover:shadow-md'
                     }`}
                   >
-                    {tab}
+                    <span>{item.label}</span>
+                    {item.count !== null && (
+                      <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full bg-white text-slate-900 font-black text-xs shadow-xs">
+                        {item.count}
+                      </span>
+                    )}
                   </button>
                 );
               })}
-            </div>
-
-            {/* Controls Bar: Select Tax Year Dropdown (2024, 2025, 2026) + DOWNLOAD TAX ORGANIZER {year} */}
-            <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-              
-              {/* Select Tax Year Dropdown */}
-              <div className="flex items-center gap-3">
-                <label className="text-xs font-extrabold uppercase tracking-wider text-slate-700 whitespace-nowrap">
-                  Select Tax Year:
-                </label>
-                <div className="relative">
-                  <select
-                    value={selectedTaxYear}
-                    onChange={(e) => setSelectedTaxYear(e.target.value as TaxYearType)}
-                    className="bg-slate-50 border-2 border-pluto-navy/30 hover:border-pluto-navy text-pluto-navy font-black text-sm rounded-xl px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-pluto-navy cursor-pointer transition-colors shadow-sm"
-                  >
-                    <option value="2026">2026</option>
-                    <option value="2025">2025</option>
-                    <option value="2024">2024</option>
-                  </select>
-                </div>
-                <span className="text-xs text-slate-400 hidden sm:inline">
-                  (Changes milestone status and documents automatically)
-                </span>
-              </div>
-
-              {/* Prominent DOWNLOAD TAX ORGANIZER Button */}
-              <button
-                onClick={handleDownloadTaxOrganizer}
-                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-pluto-gold via-pluto-gold-bright to-amber-400 hover:from-amber-400 hover:to-pluto-gold text-pluto-navy-deep font-black px-5 py-2.5 rounded-xl text-xs sm:text-sm shadow-md transition-all hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <Download className="w-4 h-4 text-pluto-navy-deep stroke-[2.5]" />
-                <span>DOWNLOAD TAX ORGANIZER {selectedTaxYear}</span>
-              </button>
-            </div>
-
-            {/* "File Status" 5-Stage Tracker Card (matching image copy 31.png) */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
-                <div>
-                  <h3 className="text-lg font-black text-slate-900 font-heading">
-                    File Status
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Filing Season {selectedTaxYear} • Stage: <strong className="text-pluto-navy">{currentYearData.statusLabel}</strong>
-                  </p>
-                </div>
-                <div className="inline-flex items-center gap-1.5 bg-pluto-blue-light text-pluto-navy px-3 py-1 rounded-full text-xs font-bold">
-                  <Sparkles className="w-3.5 h-3.5 text-pluto-gold fill-pluto-gold" />
-                  <span>Tax Year {selectedTaxYear} Active</span>
-                </div>
-              </div>
-
-              {/* Connected 5-Stage Progress Visual Bar */}
-              <div className="relative py-4">
-                
-                {/* Connecting Line Background */}
-                <div className="hidden sm:block absolute top-10 left-[10%] right-[10%] h-1 bg-slate-200 z-0">
-                  <div 
-                    className="h-full bg-emerald-500 transition-all duration-700"
-                    style={{
-                      width: selectedTaxYear === '2024' ? '100%' : selectedTaxYear === '2025' ? '50%' : '25%'
-                    }}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 relative z-10">
-                  {fileStatusSteps.map((step) => {
-                    const isCompleted = currentYearData.step > step.id || (currentYearData.step === 5 && step.id === 5);
-                    const isCurrent = currentYearData.step === step.id && currentYearData.step !== 5;
-
-                    return (
-                      <div key={step.id} className="flex sm:flex-col items-center sm:text-center gap-3 sm:gap-2">
-                        
-                        {/* Circle Node */}
-                        <div 
-                          className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm shadow-md transition-all shrink-0 ${
-                            isCompleted
-                              ? 'bg-emerald-500 text-white ring-4 ring-emerald-100'
-                              : isCurrent
-                              ? 'bg-pluto-navy text-pluto-gold ring-4 ring-amber-100 animate-pulse'
-                              : 'bg-slate-100 text-slate-400 border border-slate-300'
-                          }`}
-                        >
-                          {isCompleted ? (
-                            <Check className="w-5 h-5 stroke-[3]" />
-                          ) : (
-                            step.id
-                          )}
-                        </div>
-
-                        {/* Title & Subtext */}
-                        <div>
-                          <div className={`text-xs font-black font-heading ${
-                            isCurrent ? 'text-pluto-navy' : isCompleted ? 'text-slate-800' : 'text-slate-400'
-                          }`}>
-                            {step.title}
-                          </div>
-                          <div className="text-[10px] text-slate-500 mt-0.5">
-                            {isCompleted ? 'Completed' : isCurrent ? 'In Progress' : 'Pending'}
-                          </div>
-                        </div>
-
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Status Explanation Banner */}
-              <div className="mt-6 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-700 flex items-center gap-2.5">
-                <Info className="w-4 h-4 text-pluto-navy shrink-0" />
-                <span>{currentYearData.filingBanner}</span>
-              </div>
             </div>
 
             {/* =====================================================================
@@ -887,7 +954,121 @@ export const PortalPage: React.FC = () => {
 
             {/* TAB 1: OVERVIEW */}
             {activeDashboardTab === 'Overview' && (
-              <div className="space-y-6">
+              <div className="space-y-6 animate-fade-in">
+                
+                {/* Controls Bar: Select Tax Year Dropdown (2024, 2025, 2026) + DOWNLOAD TAX ORGANIZER {year} */}
+                <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  
+                  {/* Select Tax Year Dropdown */}
+                  <div className="flex items-center gap-3">
+                    <label className="text-xs font-extrabold uppercase tracking-wider text-slate-700 whitespace-nowrap">
+                      Select Tax Year:
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={selectedTaxYear}
+                        onChange={(e) => setSelectedTaxYear(e.target.value as TaxYearType)}
+                        className="bg-slate-50 border-2 border-pluto-navy/30 hover:border-pluto-navy text-pluto-navy font-black text-sm rounded-xl px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-pluto-navy cursor-pointer transition-colors shadow-sm"
+                      >
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                      </select>
+                    </div>
+                    <span className="text-xs text-slate-400 hidden sm:inline">
+                      (Changes milestone status and documents automatically)
+                    </span>
+                  </div>
+
+                  {/* Prominent DOWNLOAD TAX ORGANIZER Button */}
+                  <button
+                    onClick={handleDownloadTaxOrganizer}
+                    className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-pluto-gold via-pluto-gold-bright to-amber-400 hover:from-amber-400 hover:to-pluto-gold text-pluto-navy-deep font-black px-5 py-2.5 rounded-xl text-xs sm:text-sm shadow-md transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <Download className="w-4 h-4 text-pluto-navy-deep stroke-[2.5]" />
+                    <span>DOWNLOAD TAX ORGANIZER {selectedTaxYear}</span>
+                  </button>
+                </div>
+
+                {/* "File Status" 5-Stage Tracker Card (matching image copy 31.png) */}
+                <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+                    <div>
+                      <h3 className="text-lg font-black text-slate-900 font-heading">
+                        File Status
+                      </h3>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Filing Season {selectedTaxYear} • Stage: <strong className="text-pluto-navy">{currentYearData.statusLabel}</strong>
+                      </p>
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 bg-pluto-blue-light text-pluto-navy px-3 py-1 rounded-full text-xs font-bold">
+                      <Sparkles className="w-3.5 h-3.5 text-pluto-gold fill-pluto-gold" />
+                      <span>Tax Year {selectedTaxYear} Active</span>
+                    </div>
+                  </div>
+
+                  {/* Connected 5-Stage Progress Visual Bar */}
+                  <div className="relative py-4">
+                    
+                    {/* Connecting Line Background */}
+                    <div className="hidden sm:block absolute top-10 left-[10%] right-[10%] h-1 bg-slate-200 z-0">
+                      <div 
+                        className="h-full bg-emerald-500 transition-all duration-700"
+                        style={{
+                          width: selectedTaxYear === '2024' ? '100%' : selectedTaxYear === '2025' ? '50%' : '25%'
+                        }}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 relative z-10">
+                      {fileStatusSteps.map((step) => {
+                        const isCompleted = currentYearData.step > step.id || (currentYearData.step === 5 && step.id === 5);
+                        const isCurrent = currentYearData.step === step.id && currentYearData.step !== 5;
+
+                        return (
+                          <div key={step.id} className="flex sm:flex-col items-center sm:text-center gap-3 sm:gap-2">
+                            
+                            {/* Circle Node */}
+                            <div 
+                              className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm shadow-md transition-all shrink-0 ${
+                                isCompleted
+                                  ? 'bg-emerald-500 text-white ring-4 ring-emerald-100'
+                                  : isCurrent
+                                  ? 'bg-pluto-navy text-pluto-gold ring-4 ring-amber-100 animate-pulse'
+                                  : 'bg-slate-100 text-slate-400 border border-slate-300'
+                              }`}
+                            >
+                              {isCompleted ? (
+                                <Check className="w-5 h-5 stroke-[3]" />
+                              ) : (
+                                step.id
+                              )}
+                            </div>
+
+                            {/* Title & Subtext */}
+                            <div>
+                              <div className={`text-xs font-black font-heading ${
+                                isCurrent ? 'text-pluto-navy' : isCompleted ? 'text-slate-800' : 'text-slate-400'
+                              }`}>
+                                {step.title}
+                              </div>
+                              <div className="text-[10px] text-slate-500 mt-0.5">
+                                {isCompleted ? 'Completed' : isCurrent ? 'In Progress' : 'Pending'}
+                              </div>
+                            </div>
+
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Status Explanation Banner */}
+                  <div className="mt-6 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-700 flex items-center gap-2.5">
+                    <Info className="w-4 h-4 text-pluto-navy shrink-0" />
+                    <span>{currentYearData.filingBanner}</span>
+                  </div>
+                </div>
                 
                 {/* 2 Columns: Documents Vault Summary & CPA Messaging */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -1194,133 +1375,44 @@ export const PortalPage: React.FC = () => {
               </div>
             )}
 
-            {/* TAB 3: MY DOCS */}
+            {/* TAB 3: MY DOCS (EXACT REFERENCE: image copy 41.png) */}
             {activeDashboardTab === 'My Docs' && (
-              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <h3 className="text-xl font-bold text-slate-900 font-heading">
-                      My Document Repository ({selectedTaxYear})
-                    </h3>
-                    <p className="text-xs text-slate-500 mt-1">
-                      All tax forms and supporting records uploaded for Tax Year {selectedTaxYear}.
-                    </p>
-                  </div>
+              <div className="space-y-6 animate-fade-in max-w-6xl mx-auto">
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-slate-900 font-heading">
+                  My Documents
+                </h1>
 
-                  <button
-                    onClick={handleDownloadTaxOrganizer}
-                    className="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 px-4 py-2 rounded-xl text-xs font-bold transition-colors"
-                  >
-                    <Download className="w-4 h-4 text-pluto-navy" />
-                    <span>Download Tax Organizer {selectedTaxYear}</span>
-                  </button>
-                </div>
-
-                {/* Mobile View: Grand Document Cards */}
-                <div className="block md:hidden space-y-3">
-                  {currentYearData.documents.map((doc) => (
-                    <div 
-                      key={doc.id}
-                      className="group relative p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 hover:border-pluto-gold/80 bg-slate-50/70 hover:bg-white transition-all duration-300 shadow-xs hover:shadow-md flex flex-col gap-3"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                        <div className="flex items-center gap-3 min-w-0 flex-1">
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pluto-blue-light to-blue-100 text-pluto-navy flex items-center justify-center shrink-0 border border-blue-200/80 shadow-xs">
-                            <FileText className="w-5 h-5 text-pluto-navy" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="text-xs sm:text-sm font-extrabold text-slate-900 truncate" title={doc.name}>
-                              {doc.name}
-                            </div>
-                            <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[10px] sm:text-[11px] text-slate-500 font-medium">
-                              <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-pluto-navy/5 text-pluto-navy font-bold border border-pluto-navy/10">
-                                {doc.category}
-                              </span>
-                              <span>•</span>
-                              <span>{doc.size}</span>
-                              <span>•</span>
-                              <span>{doc.uploadDate}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="self-start sm:self-center shrink-0 pl-1">
-                          <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-xs">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" />
-                            <span>{doc.status}</span>
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 text-xs">
-                        <div className="flex items-center gap-1 text-[11px] text-slate-500 font-medium">
-                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                          <span>AES-256 Vault</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => setPreviewModalDoc(doc)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 hover:text-pluto-navy hover:bg-slate-100 border border-slate-200 transition-colors shadow-xs"
-                          >
-                            <Eye className="w-3.5 h-3.5 text-pluto-navy" />
-                            <span>View</span>
-                          </button>
-                          <button
-                            onClick={handleDownloadTaxOrganizer}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-pluto-navy hover:text-white bg-blue-50/90 hover:bg-pluto-navy border border-blue-200 shadow-xs transition-all"
-                          >
-                            <Download className="w-3.5 h-3.5" />
-                            <span>Download</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Desktop View: Full Spreadsheet Table */}
-                <div className="hidden md:block overflow-x-auto">
-                  <table className="w-full text-left text-xs">
+                {/* Table matching image copy 41.png */}
+                <div className="bg-white rounded-xl border border-slate-200 overflow-x-auto shadow-sm">
+                  <table className="w-full text-left border-collapse text-sm">
                     <thead>
-                      <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider">
-                        <th className="py-3 px-4">Document Name</th>
-                        <th className="py-3 px-4">Category</th>
-                        <th className="py-3 px-4">Upload Date</th>
-                        <th className="py-3 px-4">Size</th>
-                        <th className="py-3 px-4">Status</th>
-                        <th className="py-3 px-4 text-right">Actions</th>
+                      <tr className="border-b border-slate-200 bg-white">
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[6%]">#</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[14%]">Year</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[24%]">Type</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[22%]">Message</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[16%]">Upload Date</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[18%]">Status</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                      {currentYearData.documents.map((doc) => (
-                        <tr key={doc.id} className="hover:bg-slate-50/80 transition-colors">
-                          <td className="py-3 px-4 font-bold text-slate-900 flex items-center gap-2">
-                            <FileText className="w-4 h-4 text-pluto-navy shrink-0" />
-                            <span>{doc.name}</span>
-                          </td>
-                          <td className="py-3 px-4 text-slate-600">{doc.category}</td>
-                          <td className="py-3 px-4 text-slate-500">{doc.uploadDate}</td>
-                          <td className="py-3 px-4 text-slate-500">{doc.size}</td>
-                          <td className="py-3 px-4">
-                            <span className="font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px]">
-                              {doc.status}
-                            </span>
-                          </td>
-                          <td className="py-3 px-4 text-right">
-                            <div className="flex items-center justify-end gap-2">
+                      {myDocsList.map((doc) => (
+                        <tr key={doc.id} className="hover:bg-slate-50/70 transition-colors">
+                          <td className="py-4 px-5 text-slate-800 font-semibold">{doc.id}</td>
+                          <td className="py-4 px-5 text-slate-800 font-normal">{doc.year}</td>
+                          <td className="py-4 px-5 text-slate-800 font-normal">{doc.type}</td>
+                          <td className="py-4 px-5 text-slate-700">{doc.message}</td>
+                          <td className="py-4 px-5 text-slate-700 whitespace-nowrap">{doc.uploadDate}</td>
+                          <td className="py-4 px-5">
+                            <div className="flex items-center gap-2">
+                              <span className="inline-block bg-[#1D4ED8] text-white px-4 py-2 rounded-md text-xs font-bold text-center min-w-[100px] shadow-sm">
+                                {doc.status}
+                              </span>
                               <button
-                                onClick={() => setPreviewModalDoc(doc)}
-                                className="p-1.5 rounded-lg text-slate-500 hover:text-pluto-navy hover:bg-slate-100"
-                                title="View Details"
+                                onClick={() => handleDownloadMyDocItem(doc)}
+                                className="bg-[#EF4444] hover:bg-[#DC2626] text-white px-4 py-2 rounded-md text-xs font-bold shadow-sm transition-all hover:scale-105 active:scale-95"
                               >
-                                <Eye className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={handleDownloadTaxOrganizer}
-                                className="p-1.5 rounded-lg text-slate-500 hover:text-pluto-navy hover:bg-slate-100"
-                                title="Download Document"
-                              >
-                                <Download className="w-4 h-4" />
+                                Download
                               </button>
                             </div>
                           </td>
@@ -1329,304 +1421,209 @@ export const PortalPage: React.FC = () => {
                     </tbody>
                   </table>
                 </div>
+
+                {/* Mobile View for smaller screens */}
+                <div className="block sm:hidden space-y-3">
+                  {myDocsList.map((doc) => (
+                    <div key={doc.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2.5">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs text-slate-500">#{doc.id} • Tax Year {doc.year}</span>
+                        <span className="text-xs text-slate-400">{doc.uploadDate}</span>
+                      </div>
+                      <div className="text-sm font-bold text-slate-900">{doc.type}</div>
+                      <div className="text-xs text-slate-600">Message: {doc.message}</div>
+                      <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+                        <span className="flex-1 bg-[#1D4ED8] text-white py-2 rounded-md text-xs font-bold text-center">
+                          {doc.status}
+                        </span>
+                        <button
+                          onClick={() => handleDownloadMyDocItem(doc)}
+                          className="flex-1 bg-[#EF4444] hover:bg-[#DC2626] text-white py-2 rounded-md text-xs font-bold text-center"
+                        >
+                          Download
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
-            {/* TAB 4: TAX RETURNS */}
+            {/* TAB 4: TAX RETURNS (EXACT REFERENCE: image copy 39.png) */}
             {activeDashboardTab === 'Tax Returns' && (
-              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 font-heading">
-                    CPA-Prepared Tax Returns & Filing Records ({selectedTaxYear})
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Download official Form 1040 summaries, schedules, and IRS electronic filing acknowledgment certificates.
-                  </p>
+              <div className="space-y-6 animate-fade-in max-w-6xl mx-auto">
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-slate-900 font-heading">
+                  Draft Documents / Tax Return
+                </h1>
+
+                {/* Table matching image copy 39.png */}
+                <div className="bg-white rounded-xl border border-slate-200 overflow-x-auto shadow-sm">
+                  <table className="w-full text-left border-collapse text-sm">
+                    <thead>
+                      <tr className="border-b border-slate-200 bg-white">
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[14%]">User Id</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[24%]">Document Type</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[16%]">Document</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[22%]">Comment</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[12%]">Date</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[12%]">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {draftReturns.map((row) => (
+                        <tr key={row.id} className="hover:bg-slate-50/70 transition-colors">
+                          <td className="py-4 px-5 text-slate-800 font-semibold">{row.userId}</td>
+                          <td className="py-4 px-5 text-slate-800 font-normal">{row.documentType}</td>
+                          <td className="py-4 px-5">
+                            <button
+                              onClick={() => handleDownloadDraftReturn(row)}
+                              className="bg-[#EF4444] hover:bg-[#DC2626] text-white px-5 py-2 rounded-md text-xs font-bold transition-all shadow-sm hover:scale-105 active:scale-95"
+                            >
+                              Download
+                            </button>
+                          </td>
+                          <td className="py-4 px-5 text-slate-700">{row.comment}</td>
+                          <td className="py-4 px-5 text-slate-700 whitespace-nowrap">{row.date}</td>
+                          <td className="py-4 px-5">
+                            {row.status === 'Completed' ? (
+                              <span className="inline-block bg-[#1D4ED8] text-white px-5 py-2 rounded-md text-xs font-bold text-center min-w-[95px] shadow-sm">
+                                Completed
+                              </span>
+                            ) : (
+                              <span className="inline-block bg-[#EF4444] text-white px-5 py-2 rounded-md text-xs font-bold text-center min-w-[95px] shadow-sm">
+                                Unpaid
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4">
-                  {currentYearData.returns.map((ret) => (
-                    <div 
-                      key={ret.id}
-                      className="p-5 rounded-2xl border border-slate-200 bg-slate-50/70 hover:bg-slate-50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4"
-                    >
-                      <div className="flex items-start gap-3.5">
-                        <div className="w-12 h-12 rounded-xl bg-pluto-navy text-pluto-gold flex items-center justify-center shrink-0 shadow-sm">
-                          <FileCheck className="w-6 h-6" />
-                        </div>
-                        <div>
-                          <div className="inline-block text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-blue-100 text-pluto-navy mb-1">
-                            {ret.category}
-                          </div>
-                          <h4 className="text-base font-bold text-slate-900 font-heading">
-                            {ret.title}
-                          </h4>
-                          <div className="text-xs text-slate-500 flex flex-wrap items-center gap-3 mt-1">
-                            <span>Filing Status: <strong className="text-emerald-700">{ret.status}</strong></span>
-                            <span>•</span>
-                            <span>E-File ID: <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200">{ret.efileId}</code></span>
-                            {ret.refundAmount > 0 && (
-                              <>
-                                <span>•</span>
-                                <span className="font-bold text-emerald-600">Refund: ${ret.refundAmount.toLocaleString()}</span>
-                              </>
-                            )}
-                          </div>
-                        </div>
+                {/* Mobile View for smaller screens */}
+                <div className="block sm:hidden space-y-3">
+                  {draftReturns.map((row) => (
+                    <div key={row.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2.5">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs text-slate-500 font-mono">{row.userId}</span>
+                        {row.status === 'Completed' ? (
+                          <span className="bg-[#1D4ED8] text-white px-3 py-1 rounded-md text-[11px] font-bold">Completed</span>
+                        ) : (
+                          <span className="bg-[#EF4444] text-white px-3 py-1 rounded-md text-[11px] font-bold">Unpaid</span>
+                        )}
                       </div>
-
+                      <div className="text-sm font-bold text-slate-900">{row.documentType}</div>
+                      <div className="text-xs text-slate-600 flex justify-between">
+                        <span>Comment: {row.comment}</span>
+                        <span>{row.date}</span>
+                      </div>
                       <button
-                        onClick={() => handleDownloadTaxReturn(ret)}
-                        className="inline-flex items-center justify-center gap-2 bg-pluto-navy hover:bg-pluto-navy-deep text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all hover:scale-[1.02] shrink-0"
+                        onClick={() => handleDownloadDraftReturn(row)}
+                        className="w-full bg-[#EF4444] hover:bg-[#DC2626] text-white py-2 rounded-md text-xs font-bold transition-all"
                       >
-                        <Download className="w-4 h-4 text-pluto-gold" />
-                        <span>Download Form 1040 PDF</span>
+                        Download
                       </button>
                     </div>
                   ))}
                 </div>
-
-                <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 flex items-center gap-3">
-                  <ShieldCheck className="w-5 h-5 text-amber-700 shrink-0" />
-                  <span>
-                    All PDF downloads generated are official, certified summary documents containing IRS e-file confirmation numbers and CPA certification blocks.
-                  </span>
-                </div>
               </div>
             )}
 
-            {/* TAB 5: INVOICES (EXACT REFERENCE: image copy 32.png) */}
-            {activeDashboardTab === 'Invoices' && (() => {
-              const allCount = currentYearData.invoices.length;
-              const completedCount = currentYearData.invoices.filter((i) => i.status === 'PAID').length;
-              const unpaidCount = currentYearData.invoices.filter((i) => i.status !== 'PAID').length;
-              const filteredInvoices = currentYearData.invoices.filter((inv) => {
-                if (invoiceFilter === 'Completed') return inv.status === 'PAID';
-                if (invoiceFilter === 'Unpaid') return inv.status !== 'PAID';
-                return true;
-              });
+            {/* TAB 5: INVOICES (EXACT REFERENCE: image copy 40.png) */}
+            {activeDashboardTab === 'Invoices' && (
+              <div className="space-y-6 animate-fade-in max-w-6xl mx-auto">
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-[#082B63] font-heading">
+                  Tax Return
+                </h1>
 
-              return (
-                <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
-                  
-                  {/* Top Bar: Title & Status Buttons (image copy 32.png) */}
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-                    <div>
-                      <h3 className="text-xl font-black text-slate-900 font-heading">
-                        Tax Invoice Management ({selectedTaxYear})
-                      </h3>
-                      <p className="text-xs text-slate-500 mt-1">
-                        Secure e-invoicing for professional Form 1040 preparation, DTAA analysis & FBAR disclosures.
-                      </p>
-                    </div>
-
-                    {/* Status Filter Buttons (image copy 32.png) */}
-                    <div className="flex flex-wrap items-center gap-2">
-                      <button
-                        onClick={() => setInvoiceFilter('All')}
-                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${
-                          invoiceFilter === 'All'
-                            ? 'bg-pluto-navy text-white shadow-md'
-                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                        }`}
-                      >
-                        All Invoices ({allCount})
-                      </button>
-                      <button
-                        onClick={() => setInvoiceFilter('Completed')}
-                        className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-black transition-all ${
-                          invoiceFilter === 'Completed'
-                            ? 'bg-emerald-600 text-white shadow-md'
-                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                        }`}
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>Completed ({completedCount})</span>
-                      </button>
-                      <button
-                        onClick={() => setInvoiceFilter('Unpaid')}
-                        className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-black transition-all ${
-                          invoiceFilter === 'Unpaid'
-                            ? 'bg-amber-500 text-white shadow-md'
-                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                        }`}
-                      >
-                        <AlertCircle className="w-3.5 h-3.5" />
-                        <span>Unpaid ({unpaidCount})</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Desktop Table View (Exact columns matching image copy 32.png) */}
-                  <div className="hidden md:block overflow-x-auto">
-                    <table className="w-full text-left text-xs">
-                      <thead>
-                        <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider bg-slate-50/50">
-                          <th className="py-3.5 px-4 rounded-l-xl">Tax Return</th>
-                          <th className="py-3.5 px-4">Order Id</th>
-                          <th className="py-3.5 px-4">Order Type</th>
-                          <th className="py-3.5 px-4">Invoice Amount</th>
-                          <th className="py-3.5 px-4 text-center">Invoice</th>
-                          <th className="py-3.5 px-4 text-right rounded-r-xl">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {filteredInvoices.length === 0 ? (
-                          <tr>
-                            <td colSpan={6} className="py-8 text-center text-slate-400 font-semibold">
-                              No {invoiceFilter.toLowerCase()} invoices found for Tax Year {selectedTaxYear}.
-                            </td>
-                          </tr>
-                        ) : (
-                          filteredInvoices.map((inv) => {
-                            const isPaid = inv.status === 'PAID';
-                            const isPaying = payingInvoiceId === inv.id;
-
-                            return (
-                              <tr key={inv.id} className="hover:bg-blue-50/30 transition-colors">
-                                {/* 1. Tax Return */}
-                                <td className="py-4 px-4 font-bold text-slate-900">
-                                  <div className="flex items-center gap-2">
-                                    <Receipt className="w-4 h-4 text-pluto-navy shrink-0" />
-                                    <span>{inv.taxReturn}</span>
-                                  </div>
-                                  <span className="text-[10px] text-slate-400 font-normal pl-6">
-                                    Invoice #{inv.number} • {inv.date}
-                                  </span>
-                                </td>
-
-                                {/* 2. Order Id */}
-                                <td className="py-4 px-4 font-bold">
-                                  <span className="font-mono text-xs bg-slate-100 px-2.5 py-1 rounded-md text-slate-700 border border-slate-200">
-                                    {inv.orderId}
-                                  </span>
-                                </td>
-
-                                {/* 3. Order Type */}
-                                <td className="py-4 px-4 text-slate-700 font-semibold">
-                                  {inv.orderType}
-                                </td>
-
-                                {/* 4. Invoice Amount */}
-                                <td className="py-4 px-4 font-black text-slate-900 text-sm">
-                                  ${inv.amount.toFixed(2)}
-                                </td>
-
-                                {/* 5. Invoice (Download button) */}
-                                <td className="py-4 px-4 text-center">
-                                  <button
-                                    onClick={() => handleDownloadInvoice(inv)}
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-pluto-navy hover:text-white text-slate-700 text-xs font-bold transition-all border border-slate-200 shadow-xs"
-                                    title="Download PDF Invoice"
-                                  >
-                                    <Download className="w-3.5 h-3.5" />
-                                    <span>Download</span>
-                                  </button>
-                                </td>
-
-                                {/* 6. Status (Completed or Unpaid + Pay Now) */}
-                                <td className="py-4 px-4 text-right">
-                                  {isPaid ? (
-                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black">
-                                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                                      <span>Completed</span>
-                                    </span>
-                                  ) : (
-                                    <div className="inline-flex items-center gap-2 justify-end">
-                                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-black">
-                                        Unpaid
-                                      </span>
-                                      <button
-                                        onClick={() => handlePayNow(inv)}
-                                        disabled={isPaying}
-                                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black shadow-sm transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
-                                      >
-                                        <CreditCard className="w-3.5 h-3.5" />
-                                        <span>{isPaying ? 'Processing...' : 'Pay Now'}</span>
-                                      </button>
-                                    </div>
-                                  )}
-                                </td>
-                              </tr>
-                            );
-                          })
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {/* Mobile View: High-Density Invoice Cards */}
-                  <div className="block md:hidden space-y-3.5">
-                    {filteredInvoices.length === 0 ? (
-                      <div className="py-8 text-center text-slate-400 font-semibold bg-slate-50 rounded-2xl">
-                        No {invoiceFilter.toLowerCase()} invoices found for Tax Year {selectedTaxYear}.
-                      </div>
-                    ) : (
-                      filteredInvoices.map((inv) => {
-                        const isPaid = inv.status === 'PAID';
-                        const isPaying = payingInvoiceId === inv.id;
-
-                        return (
-                          <div 
-                            key={inv.id}
-                            className="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col gap-3 shadow-xs"
-                          >
-                            <div className="flex items-start justify-between gap-2">
-                              <div>
-                                <span className="font-mono text-[11px] font-bold bg-blue-50 text-pluto-navy px-2 py-0.5 rounded border border-blue-200">
-                                  {inv.orderId}
+                {/* Table matching image copy 40.png */}
+                <div className="bg-white rounded-xl border border-slate-200 overflow-x-auto shadow-sm">
+                  <table className="w-full text-left border-collapse text-sm">
+                    <thead>
+                      <tr className="border-b border-slate-200 bg-white">
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[18%]">Order Id</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[30%]">Order Type</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[20%]">Invoice Amount</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[16%]">Invoice</th>
+                        <th className="py-4 px-5 font-bold text-slate-900 w-[16%]">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {portalInvoices.map((inv) => (
+                        <tr key={inv.id} className="hover:bg-slate-50/70 transition-colors">
+                          <td className="py-4 px-5 text-slate-800 font-semibold">{inv.orderId}</td>
+                          <td className="py-4 px-5 text-slate-800 font-normal">{inv.orderType}</td>
+                          <td className="py-4 px-5 text-slate-900 font-normal">$ {inv.amount}</td>
+                          <td className="py-4 px-5">
+                            <button
+                              onClick={() => handleDownloadPortalInvoice(inv)}
+                              className="bg-[#FACC15] hover:bg-[#EAB308] text-white px-6 py-2 rounded-md text-xs font-extrabold shadow-sm transition-all hover:scale-105 active:scale-95"
+                            >
+                              Invoice
+                            </button>
+                          </td>
+                          <td className="py-4 px-5">
+                            {inv.status === 'Completed' ? (
+                              <span className="inline-block bg-[#1D4ED8] text-white px-5 py-2 rounded-md text-xs font-bold text-center min-w-[95px] shadow-sm">
+                                Completed
+                              </span>
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                <span className="inline-block bg-[#EF4444] text-white px-4 py-2 rounded-md text-xs font-bold text-center min-w-[80px] shadow-sm">
+                                  Unpaid
                                 </span>
-                                <h4 className="text-sm font-black text-slate-900 mt-1">
-                                  {inv.taxReturn}
-                                </h4>
-                                <p className="text-xs text-slate-500 font-medium">
-                                  {inv.orderType} • #{inv.number}
-                                </p>
-                              </div>
-                              <div className="text-right">
-                                <div className="text-base font-black text-slate-900 font-heading">
-                                  ${inv.amount.toFixed(2)}
-                                </div>
-                                <div className="text-[10px] text-slate-400">
-                                  {inv.date}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center justify-between pt-2.5 border-t border-slate-200 text-xs">
-                              <button
-                                onClick={() => handleDownloadInvoice(inv)}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 font-bold border border-slate-300 shadow-xs"
-                              >
-                                <Download className="w-3.5 h-3.5 text-pluto-navy" />
-                                <span>Invoice PDF</span>
-                              </button>
-
-                              {isPaid ? (
-                                <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 font-black">
-                                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                                  <span>Completed</span>
-                                </span>
-                              ) : (
                                 <button
-                                  onClick={() => handlePayNow(inv)}
-                                  disabled={isPaying}
-                                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black shadow-sm transition-all"
+                                  onClick={() => handlePortalPayNow(inv)}
+                                  disabled={payingInvoiceId === inv.id}
+                                  className="bg-[#22C55E] hover:bg-[#16A34A] text-white px-4 py-2 rounded-md text-xs font-bold shadow-sm transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
                                 >
-                                  <CreditCard className="w-3.5 h-3.5" />
-                                  <span>{isPaying ? 'Processing...' : 'Pay Now'}</span>
+                                  {payingInvoiceId === inv.id ? 'Processing...' : 'Pay Now'}
                                 </button>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
-
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              );
-            })()}
+
+                {/* Mobile View for smaller screens */}
+                <div className="block sm:hidden space-y-3">
+                  {portalInvoices.map((inv) => (
+                    <div key={inv.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs text-slate-500 font-mono">{inv.orderId}</span>
+                        <span className="text-base font-extrabold text-slate-900">$ {inv.amount}</span>
+                      </div>
+                      <div className="text-sm font-bold text-slate-900">{inv.orderType}</div>
+                      <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+                        <button
+                          onClick={() => handleDownloadPortalInvoice(inv)}
+                          className="flex-1 bg-[#FACC15] hover:bg-[#EAB308] text-white py-2 rounded-md text-xs font-black shadow-sm"
+                        >
+                          Invoice
+                        </button>
+                        {inv.status === 'Completed' ? (
+                          <span className="flex-1 bg-[#1D4ED8] text-white py-2 rounded-md text-xs font-bold text-center">
+                            Completed
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => handlePortalPayNow(inv)}
+                            disabled={payingInvoiceId === inv.id}
+                            className="flex-1 bg-[#22C55E] hover:bg-[#16A34A] text-white py-2 rounded-md text-xs font-bold text-center"
+                          >
+                            {payingInvoiceId === inv.id ? 'Processing...' : 'Pay Now'}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Document Preview Modal */}
             {previewModalDoc && (

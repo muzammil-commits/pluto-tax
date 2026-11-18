@@ -18,7 +18,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const DEMO_USER: ClientUser = {
   id: 'usr-101',
   email: 'client@example.com',
-  name: 'Ananya Sharma',
+  name: 'Srikanth Srikanth',
   phone: '+1 (512) 555-0198',
   taxYear: '2024 / 2025',
   filingStatus: 'CPA Review',
